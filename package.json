@@ -1,6 +1,6 @@
 {
   "name": "@talkohavy/filters",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "main": "index.js",
   "type": "module",
