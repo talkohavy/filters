@@ -1,0 +1,11 @@
+{
+  "name": "@talkohavy/filters",
+  "version": "1.0.0",
+  "description": "This package exposes an easy & intuitive filtering mechanism",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test"
+  },
+  "author": "Tal Kohavy",
+  "license": "MIT"
+}
