@@ -1,10 +1,12 @@
 {
   "name": "@talkohavy/filters",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "main": "index.js",
   "type": "module",
-  "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
+  "contributors": [
+    "Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/talkohavy/filters"
