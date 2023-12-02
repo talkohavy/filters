@@ -3,9 +3,24 @@
   "version": "1.0.0",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "main": "index.js",
+  "type": "module",
+  "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/talkohavy/filters"
+  },
   "scripts": {
     "test": "node --test"
   },
   "author": "Tal Kohavy",
-  "license": "MIT"
+  "license": "MIT",
+  "sideEffects": false,
+  "devDependencies": {
+    "eslint": "^8.54.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsdoc": "^46.9.0",
+    "eslint-plugin-sort-exports": "^0.8.0",
+    "prettier": "^3.1.0"
+  }
 }
