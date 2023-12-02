@@ -4,9 +4,10 @@
  * - eslint
  * - eslint-plugin-import
  * - eslint-import-resolver-typescript
+ * - @typescript-eslint/parser
  * - eslint-plugin-sort-exports
  * - eslint-plugin-jsdoc
- * npm install -D prettier eslint eslint-plugin-import eslint-import-resolver-typescript eslint-plugin-sort-exports eslint-plugin-jsdoc
+ * npm install -D prettier eslint eslint-plugin-import eslint-import-resolver-typescript @typescript-eslint/parser eslint-plugin-sort-exports eslint-plugin-jsdoc
  */
 {
   "root": true,
