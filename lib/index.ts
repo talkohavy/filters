@@ -1,3 +1,11 @@
+declare type AndOperator = { AND?: Array<Partial<FilterChild> & AndOperator & OrOperator> };
+
+declare type OrOperator = { OR?: Array<Partial<FilterChild> & AndOperator & OrOperator> };
+
+declare type FilterChild = { fieldName: string; value: any; operator: any; key: string; NOT: boolean };
+
+declare type Filter = Array<Partial<FilterChild> & AndOperator & OrOperator>;
+
 /**
  * @description
  * Imagine a tree, with multiple levels (at least 1), where the root is at the top.
@@ -47,35 +55,41 @@
  * console.log('filteredData is:', filteredData);
  */
 class Filterer {
-  RELATION_OPERATORS = { AND: 'AND', OR: 'OR' };
+  #RELATION_OPERATORS: { AND: 'AND'; OR: 'OR' } = { AND: 'AND', OR: 'OR' };
   #compareOperators;
   #shouldItemPass;
 
-  constructor({ filterScheme }) {
+  constructor({ filterScheme }: { filterScheme: Filter }) {
     this.#compareOperators = this.#buildCompareOperators();
     this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
   }
 
   /**
-   * @param {{ data: Array }} props
-   * @returns { Array } Returns the data filtered according to a filters' schema.
+   * @param {{ data: Array<any> }} props
+   * @returns { Array<any> } Returns the data filtered according to a filters' schema.
    */
-  applyFilters({ data }) {
+  applyFilters({ data }: { data: Array<any> }): Array<any> {
     const filteredData = data.filter(this.#shouldItemPass);
 
     return filteredData;
   }
 
-  changeSchema({ filterScheme }) {
+  changeSchema({ filterScheme }: { filterScheme: Filter }): void {
     this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
   }
 
-  #buildShouldItemPass({ filterScheme, relationOperator = this.RELATION_OPERATORS.AND }) {
+  #buildShouldItemPass({
+    filterScheme,
+    relationOperator = this.#RELATION_OPERATORS.AND,
+  }: {
+    filterScheme: Filter;
+    relationOperator?: 'AND' | 'OR';
+  }) {
     // Step 1: create a booleanFunc for each node at the current tree level
     const filterFunctions = filterScheme.map((filter) => {
       if (filter.AND ?? filter.OR) {
         // This node is a relationOperation! 1. Attach a relation operation to it. 2. Keep going down further and get the array of nested filters.
-        const relationOperator = filter.AND ? this.RELATION_OPERATORS.AND : this.RELATION_OPERATORS.OR;
+        const relationOperator = filter.AND ? this.#RELATION_OPERATORS.AND : this.#RELATION_OPERATORS.OR;
         return this.#buildShouldItemPass({ filterScheme: filter[relationOperator], relationOperator });
       } else {
         // This node is a leaf/filter! Attach a Boolean function to it.
@@ -86,7 +100,7 @@ class Filterer {
     });
 
     // Step 2: apply the relation operator on all nodes on this floor level
-    if (relationOperator === this.RELATION_OPERATORS.OR) {
+    if (relationOperator === this.#RELATION_OPERATORS.OR) {
       return (item) => filterFunctions.some((filter) => filter(item));
     } else {
       return (item) => filterFunctions.every((filter) => filter(item));
@@ -176,5 +190,7 @@ class Filterer {
     };
   }
 }
+
+export type { Filter };
 
 export { Filterer };
