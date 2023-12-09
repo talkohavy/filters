@@ -8,7 +8,6 @@ const config = {
   singleQuote: true, // <--- turns this " into '
   jsxSingleQuote: true, // <--- turns this " into ' in JSX
   bracketSameLine: false, // <--- This is for an HTML file. if true, puts the closing of an opening tag on the last line instead of on a new line.
-  jsxBracketSameLine: false, // <--- Like "bracketSameLine", only for jsx.
   bracketSpacing: true, // turns this {foo: bar} into this { foo: bar }
   arrowParens: 'always', // WARNING!!! Leave it on "always"! turns this x => x into this (x) => x. This rule MUST stay on "always"! Otherwise it would collide with the "prefer-arrow-callback" & "arrow-body-style" combo from eslint.
   endOfLine: 'auto',
