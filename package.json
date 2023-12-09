@@ -2,6 +2,7 @@
   "name": "@talkohavy/filters",
   "version": "1.0.4",
   "description": "This package exposes an easy & intuitive filtering mechanism",
+  "keywords": ["filter", "talkohavy"],
   "private": "true",
   "main": "dist/index.js",
   "module": "dist/index.js",
