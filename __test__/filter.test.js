@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import { Filterer } from '../lib/index.js';
 import { data } from './constants.js';
 
-/** @typedef {import('../lib/types/index.js').Filter} Filter */
+/** @typedef {import('../lib').Filter} Filter */
 
 describe('Filterer Class', () => {
   it('Simple single filter should pass', () => {
