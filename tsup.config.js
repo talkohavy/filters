@@ -3,15 +3,15 @@ import { defineConfig } from 'tsup';
 
 // The options here is derived from CLI flags.
 export default defineConfig((_options) => ({
-  entry: ['lib/index.ts'],
-  publicDir: './lib',
+  entry: ['lib/index.js'],
+  // publicDir: './lib',
   outDir: 'dist', // <--- defaults to dist
-  bundle: false, // <--- defaults to true.
+  bundle: true, // <--- defaults to true.
   format: ['esm'], // <-- If package.json type is set to module, the filenames are: [.js,.cjs], else: [.mjs, .js].
   splitting: false, // <--- defaults to true. Code splitting currently only works with the esm output format.
   treeshake: true, // <--- esbuild has tree shaking enabled by default, but sometimes it's not working very well, so tsup offers an additional option to let you use Rollup for tree shaking instead. This flag will enable Rollup for tree shaking.
   clean: true, // <--- Should clean output directory before each build?
-  // dts: true, // <--- Generate declaration file, meaning a index.d.ts.
+  dts: true, // <--- Generate declaration file, meaning a index.d.ts.
   // sourcemap: true, // <-- If you don't minify you don't need sourcemaps! This will emit a ./dist/index.js.map.
   // minify: true, // <--- You can minify the output, resulting into lower bundle sizes.
   target: 'esnext', // <--- The value for target defaults to compilerOptions.target in your tsconfig.json, or node14 if unspecified. For more information check out esbuild's target option.

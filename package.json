@@ -33,8 +33,18 @@
   },
   "exports": {
     ".": {
-      "import": "./index.js",
-      "require": "./index.cjs"
+      "types": {
+        "require": "./index.d.cts",
+        "default": "./index.d.ts"
+      },
+      "browser": {
+        "require": "./index.cjs",
+        "default": "./index.js"
+      },
+      "default": {
+        "require": "./index.cjs",
+        "default": "./index.js"
+      }
     }
   },
   "devDependencies": {
