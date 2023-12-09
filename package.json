@@ -1,6 +1,6 @@
 {
   "name": "@talkohavy/filters",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
   "keywords": ["filter", "talkohavy"],
