@@ -4,9 +4,8 @@
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
   "keywords": ["filter", "talkohavy"],
-  "main": "./index.js",
-  "module": "./index.js",
-  "types": "./index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "type": "module",
   "scripts": {
     "build": "tsup --config tsup.config.js",

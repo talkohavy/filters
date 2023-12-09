@@ -6,7 +6,7 @@ declare type FilterChild = { fieldName: string; value: any; operator: any; key: 
 
 declare type Filter = Array<Partial<FilterChild> & AndOperator & OrOperator>;
 
-declare class Filterer {
+class Filterer {
   constructor({ filterScheme }: { filterScheme: Filter });
 
   /**
