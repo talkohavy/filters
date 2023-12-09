@@ -4,7 +4,7 @@ import { defineConfig } from 'tsup';
 // The options here is derived from CLI flags.
 export default defineConfig((_options) => ({
   entry: ['lib/index.ts'],
-  publicDir: './lib',
+  // publicDir: './lib',
   outDir: 'dist', // <--- defaults to dist
   bundle: true,
   // minify: true, // <--- You can minify the output, resulting into lower bundle sizes.
