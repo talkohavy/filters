@@ -3,7 +3,6 @@
   "version": "1.0.8",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "keywords": ["filter", "talkohavy"],
-  "private": "true",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -17,7 +16,7 @@
     "check-format": "prettier . --check",
     "preversion": "npm test",
     "version": "npm run format && npm run build",
-    "postversion": "git push && git push --tags && cd dist && npm publish",
+    "postversion": "git push && git push --tags && npm publish",
     "prepare": "husky install"
   },
   "sideEffects": false,
@@ -30,13 +29,7 @@
   "license": "MIT",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
-    "access": "restricted"
-  },
-  "exports": {
-    ".": {
-      "import": "./index.js",
-      "require": "./index.cjs"
-    }
+    "access": "public"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^6.13.2",
