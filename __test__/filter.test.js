@@ -1,6 +1,6 @@
 import assert from 'assert/strict';
 import { describe, it } from 'node:test';
-import Filterer from '../lib/Filterer.js';
+import { Filterer } from '../lib/index.js';
 import { data } from './constants.js';
 
 /** @typedef {import('../lib/types/index.js').Filter} Filter */

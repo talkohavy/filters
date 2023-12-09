@@ -1,1 +1,1 @@
-export { default } from './lib/Filterer.js';
+export { default } from './lib/index.js';

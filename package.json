@@ -2,28 +2,46 @@
   "name": "@talkohavy/filters",
   "version": "1.0.3",
   "description": "This package exposes an easy & intuitive filtering mechanism",
-  "main": "index.js",
+  "private": "true",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
-  "contributors": [
-    "Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"
-  ],
+  "scripts": {
+    "build": "tsup --config tsup.config.js",
+    "lint": "eslint -c ./.eslintrc.json \"./lib/**/*.js\"",
+    "test": "node --test",
+    "format": "prettier . --write",
+    "check-format": "prettier . --check",
+    "preversion": "npm test",
+    "version": "npm run format && npm run build",
+    "postversion": "git push && git push --tags && cd dist && npm publish",
+    "prepare": "husky install"
+  },
+  "sideEffects": false,
+  "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
   "repository": {
     "type": "git",
     "url": "https://github.com/talkohavy/filters"
   },
-  "scripts": {
-    "test": "node --test"
-  },
   "author": "Tal Kohavy",
   "license": "MIT",
-  "sideEffects": false,
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "restricted"
+  },
   "devDependencies": {
-    "@typescript-eslint/parser": "^6.13.1",
-    "eslint": "^8.54.0",
+    "@typescript-eslint/parser": "^6.13.2",
+    "eslint": "^8.55.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-jsdoc": "^46.9.0",
     "eslint-plugin-sort-exports": "^0.8.0",
-    "prettier": "^3.1.0"
+    "husky": "^8.0.3",
+    "prettier": "^3.1.0",
+    "tsup": "^8.0.1"
+  },
+  "dependencies": {
+    "package.json": "^2.0.1"
   }
 }
