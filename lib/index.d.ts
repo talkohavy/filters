@@ -19,3 +19,5 @@ declare class Filterer {
 }
 
 export { Filter };
+
+export default Filterer;
