@@ -18,6 +18,6 @@ declare class Filterer {
   changeSchema({ filterScheme }: { filterScheme: Filter }): void;
 }
 
-export { Filter };
+export { Filter, Filterer };
 
 export default Filterer;
