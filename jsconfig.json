@@ -10,6 +10,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    // "emitDeclarationOnly": true,
+    "declaration": true, // <--- Generate .d.ts files for every TypeScript or JavaScript file inside your project. These .d.ts files are type definition files which describe the external API of your module. With .d.ts files, tools like TypeScript can provide intellisense and accurate types for un-typed code.
+    "noEmit": true, // <--- Do not emit compiler output files like JavaScript source code, source-maps or declarations. This makes room for another tool like Babel, or swc to handle converting the TypeScript file to a file which can run inside a JavaScript environment. You can then use TypeScript as a tool for providing editor integration, and as a source code type-checker.
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2022", "DOM"], // adding the "DOM" library helps vs-code to recognize the window & document objects.
     "checkJs": true, // without it? this config file would not apply to js/jsx files.

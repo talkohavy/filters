@@ -1,16 +1,15 @@
 {
   "name": "@talkohavy/filters",
-  "version": "1.0.4",
+  "version": "1.0.22",
   "description": "This package exposes an easy & intuitive filtering mechanism",
+  "private": true,
   "keywords": ["filter", "talkohavy"],
-  "private": "true",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "type": "module",
   "scripts": {
     "build": "tsup --config tsup.config.js",
-    "lint": "eslint -c ./.eslintrc.json \"./lib/**/*.js\"",
+    "lint": "eslint -c ./.eslintrc.json \"./lib/**/*.ts\"",
     "test": "node --test",
     "format": "prettier . --write",
     "check-format": "prettier . --check",
@@ -25,11 +24,27 @@
     "type": "git",
     "url": "https://github.com/talkohavy/filters"
   },
-  "author": "Tal Kohavy",
+  "author": "Tal Kohavy <talkohavy@gmail.com> (https://github.com/talkohavy)",
   "license": "MIT",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "restricted"
+  },
+  "exports": {
+    ".": {
+      "types": {
+        "require": "./index.d.cts",
+        "default": "./index.d.ts"
+      },
+      "browser": {
+        "require": "./index.cjs",
+        "default": "./index.js"
+      },
+      "default": {
+        "require": "./index.cjs",
+        "default": "./index.js"
+      }
+    }
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^6.13.2",
@@ -42,7 +57,8 @@
     "prettier": "^3.1.0",
     "tsup": "^8.0.1"
   },
-  "dependencies": {
-    "package.json": "^2.0.1"
+  "bugs": {
+    "url": "https://github.com/talkohavy/filters/issues",
+    "email": "talkohavy@gmail.com"
   }
 }
