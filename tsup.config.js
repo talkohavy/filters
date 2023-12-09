@@ -14,7 +14,7 @@ export default defineConfig((_options) => ({
   dts: true, // <--- Generate declaration file, meaning a index.d.ts.
   // sourcemap: true, // <-- If you don't minify you don't need sourcemaps! This will emit a ./dist/index.js.map.
   // minify: true, // <--- You can minify the output, resulting into lower bundle sizes.
-  // target: , // <--- The value for target defaults to compilerOptions.target in your tsconfig.json, or node14 if unspecified. For more information check out esbuild's target option.
+  target: 'esnext', // <--- The value for target defaults to compilerOptions.target in your tsconfig.json, or node14 if unspecified. For more information check out esbuild's target option.
   // env: process.NODE_ENV,
   async onSuccess() {
     // Step 1: copy README file as-is to dist
