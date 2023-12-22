@@ -12,9 +12,10 @@
     "lint": "eslint -c ./.eslintrc.json \"./lib/**/*.ts\"",
     "test": "node --test",
     "format": "prettier . --write",
+    "format-pkg-json": "prettier package.json --write",
     "check-format": "prettier . --check",
     "preversion": "npm test",
-    "version": "npm run format && npm run build",
+    "version": "npm run format-pkg-json && npm run build",
     "postversion": "git push && git push --tags && cd dist && npm publish",
     "prepare": "husky install"
   },
