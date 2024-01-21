@@ -7,6 +7,12 @@
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./index.cjs"
+    }
+  },
   "scripts": {
     "build": "tsup --config tsup.config.js",
     "lint": "eslint -c ./.eslintrc.json \"./src/**/*.ts\"",
@@ -30,22 +36,6 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "restricted"
-  },
-  "exports": {
-    ".": {
-      "types": {
-        "require": "./index.d.cts",
-        "default": "./index.d.ts"
-      },
-      "browser": {
-        "require": "./index.cjs",
-        "default": "./index.js"
-      },
-      "default": {
-        "require": "./index.cjs",
-        "default": "./index.js"
-      }
-    }
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.2",
