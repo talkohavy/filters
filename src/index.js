@@ -1,5 +1,5 @@
 /**
- * @typedef {import('./types/').IFilterer} IFilterer
+ * @typedef {import('./index').IFilterer} IFilterer
  */
 
 /**
