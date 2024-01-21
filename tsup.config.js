@@ -3,8 +3,8 @@ import { defineConfig } from 'tsup';
 
 // The options here is derived from CLI flags.
 export default defineConfig((_options) => ({
-  entry: ['lib/index.js'],
-  publicDir: './lib',
+  entry: ['src/index.js'],
+  publicDir: './src',
   outDir: 'dist', // <--- defaults to dist
   bundle: false, // <--- defaults to true.
   format: ['esm'], // <-- If package.json type is set to module, the filenames are: [.js,.cjs], else: [.mjs, .js].

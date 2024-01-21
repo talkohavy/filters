@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "build": "tsup --config tsup.config.js",
-    "lint": "eslint -c ./.eslintrc.json \"./lib/**/*.ts\"",
+    "lint": "eslint -c ./.eslintrc.json \"./src/**/*.ts\"",
     "test": "node --test",
     "format": "prettier . --write",
     "format-pkg-json": "prettier package.json --write",

@@ -1,9 +1,9 @@
 import assert from 'assert/strict';
 import { describe, it } from 'node:test';
-import { Filterer } from '../lib/index.js';
+import { Filterer } from '../src/index.js';
 import { data } from './constants.js';
 
-/** @typedef {import('../lib').Filter} Filter */
+/** @typedef {import('../src').Filter} Filter */
 
 describe('Filterer Class', () => {
   it('Simple single filter should pass', () => {
