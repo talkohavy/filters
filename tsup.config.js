@@ -21,7 +21,7 @@ const tsupConfig = defineConfig((_options) => ({
   async onSuccess() {
     copyTheReadmeFile();
 
-    copyTheNpmrcFile();
+    // copyTheNpmrcFile();
 
     copyThePackageJsonFile();
 
@@ -39,11 +39,11 @@ function copyTheReadmeFile() {
   readStreamReadmeMd.pipe(writeStreamReadmeMd);
 }
 
-function copyTheNpmrcFile() {
-  const readStreamNpmrc = fs.createReadStream('./.npmrc');
-  const writeStreamNpmrc = fs.createWriteStream(`./${outDir}/.npmrc`);
-  readStreamNpmrc.pipe(writeStreamNpmrc);
-}
+// function copyTheNpmrcFile() {
+//   const readStreamNpmrc = fs.createReadStream('./.npmrc');
+//   const writeStreamNpmrc = fs.createWriteStream(`./${outDir}/.npmrc`);
+//   readStreamNpmrc.pipe(writeStreamNpmrc);
+// }
 
 function copyThePackageJsonFile() {
   const packageJson = JSON.parse(fs.readFileSync('./package.json').toString());
