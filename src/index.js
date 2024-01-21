@@ -1,4 +1,9 @@
 /**
+ * @typedef {import('./types/').IFilterer} IFilterer
+ */
+
+/**
+ * @implements {IFilterer}
  * @description
  * Imagine a tree, with multiple levels (at least 1), where the root is at the top.
  * A tree is built from nodes and arcs.
