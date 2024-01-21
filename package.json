@@ -11,11 +11,11 @@
     "build": "tsup --config tsup.config.js",
     "lint": "eslint -c ./.eslintrc.json \"./src/**/*.ts\"",
     "test": "node --test",
-    "format": "prettier . --write",
-    "format-pkg-json": "prettier package.json --write",
-    "check-format": "prettier . --check",
+    "format": "biome format --verbose ./src",
+    "format-prettier": "prettier . --check",
+    "format-prettier-fix": "prettier . --write",
     "preversion": "npm test",
-    "version": "npm run format-pkg-json && npm run build",
+    "version": "npm run format-prettier-fix && npm run build",
     "postversion": "git push && git push --tags && cd dist && npm publish",
     "prepare": "husky install"
   },
@@ -48,6 +48,7 @@
     }
   },
   "devDependencies": {
+    "@biomejs/biome": "1.5.2",
     "eslint": "^8.55.0",
     "eslint-plugin-ezlint": "^1.0.14",
     "husky": "^8.0.3",

@@ -77,20 +77,19 @@ class Filterer {
         // This node is a relationOperation! 1. Attach a relation operation to it. 2. Keep going down further and get the array of nested filters.
         const relationOperator = filter.AND ? this.RELATION_OPERATORS.AND : this.RELATION_OPERATORS.OR;
         return this.#buildShouldItemPass({ filterScheme: filter[relationOperator], relationOperator });
-      } else {
-        // This node is a leaf/filter! Attach a Boolean function to it.
-        const booleanFunc = this.#createBooleanFunction(filter);
-
-        return filter.NOT ? this.#compareOperators.applyNot(booleanFunc) : booleanFunc;
       }
+      // This node is a leaf/filter! Attach a Boolean function to it.
+      const booleanFunc = this.#createBooleanFunction(filter);
+
+      return filter.NOT ? this.#compareOperators.applyNot(booleanFunc) : booleanFunc;
     });
 
     // Step 2: apply the relation operator on all nodes on this floor level
     if (relationOperator === this.RELATION_OPERATORS.OR) {
       return (item) => filterFunctions.some((filter) => filter(item));
-    } else {
-      return (item) => filterFunctions.every((filter) => filter(item));
     }
+
+    return (item) => filterFunctions.every((filter) => filter(item));
   }
 
   #createBooleanFunction(filter) {
@@ -103,6 +102,7 @@ class Filterer {
     // Normal case: decide true or false only based on 'value'
     return (item) => {
       try {
+        // biome-ignore lint: I need this var
         var { itemValue, lastItem, lastKey } = this.#extractNestedValueFromItem({ item, fieldName });
       } catch (_error) {
         return false;
@@ -129,6 +129,7 @@ class Filterer {
   #buildCompareOperators() {
     // Two-values comparison:
     const equal = ({ itemValue, value }) => itemValue === value;
+    // biome-ignore lint: I need this soft equal
     const softEqual = ({ itemValue, value }) => itemValue == value;
     const gt = ({ itemValue, value }) => itemValue > value;
     const gte = ({ itemValue, value }) => itemValue >= value;
