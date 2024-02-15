@@ -14,12 +14,12 @@
     }
   },
   "scripts": {
-    "build": "tsup --config tsup.config.js",
     "lint": "eslint -c ./.eslintrc.json \"./src/**/*.ts\"",
-    "test": "node --test",
     "format": "biome format --verbose ./src",
     "format-prettier": "prettier . --check",
     "format-prettier-fix": "prettier . --write",
+    "build": "tsup --config tsup.config.js",
+    "test": "node --test",
     "preversion": "npm test",
     "version": "npm run format-prettier-fix && npm run build",
     "postversion": "git push && git push --tags && cd dist && npm publish",
