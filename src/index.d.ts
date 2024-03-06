@@ -26,18 +26,18 @@ export type CompareOperators =
   | 'keyExists'
   | 'applyNot';
 
-export type Filter = Array<Partial<FilterChild> & AndOperator & OrOperator>;
+export type FilterScheme = Array<Partial<FilterChild> & AndOperator & OrOperator>;
 
 export class Filterer implements IFilterer {
-  constructor(props: { filterScheme: Filter });
+  constructor(props: { filterScheme: FilterScheme });
 
   applyFilters(props: { data: Array<any> }): Array<any>;
 
-  changeSchema(props: { filterScheme: Filter }): void;
+  changeSchema(props: { filterScheme: FilterScheme }): void;
 }
 
 export interface IFilterer {
   applyFilters(props: { data: Array<any> }): Array<any>;
 
-  changeSchema(props: { filterScheme: Filter }): void;
+  changeSchema(props: { filterScheme: FilterScheme }): void;
 }

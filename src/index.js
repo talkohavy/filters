@@ -1,5 +1,6 @@
 /**
  * @typedef {import('./index').IFilterer} IFilterer
+ * @typedef {import('./index').FilterScheme} FilterScheme
  */
 
 /**
@@ -56,14 +57,15 @@ class Filterer {
   #compareOperators;
   #shouldItemPass;
 
+  /** @param {{filterScheme: FilterScheme}} props */
   constructor({ filterScheme }) {
     this.#compareOperators = this.#buildCompareOperators();
     this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
   }
 
   /**
-   * @param {{ data: Array }} props
-   * @returns { Array } Returns the data filtered according to a filters' schema.
+   * @param {{ data: Array<any> }} props
+   * @returns { Array<any> } Returns the data filtered according to a filters' schema.
    */
   applyFilters({ data }) {
     const filteredData = data.filter(this.#shouldItemPass);
