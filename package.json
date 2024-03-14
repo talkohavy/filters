@@ -3,10 +3,7 @@
   "version": "1.0.27",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
-  "keywords": [
-    "filter",
-    "talkohavy"
-  ],
+  "keywords": ["filter", "talkohavy"],
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
@@ -25,13 +22,10 @@
     "test": "node --test",
     "preversion": "npm test",
     "version": "npm run format-prettier-fix && npm run build",
-    "postversion": "git push && git push --tags && cd dist && npm publish",
-    "prepare": "husky install"
+    "postversion": "git push && git push --tags && cd dist && npm publish"
   },
   "sideEffects": false,
-  "contributors": [
-    "Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"
-  ],
+  "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
   "repository": {
     "type": "git",
     "url": "https://github.com/talkohavy/filters"
@@ -43,12 +37,12 @@
     "access": "restricted"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.5.2",
-    "eslint": "^8.55.0",
+    "@biomejs/biome": "1.6.1",
+    "eslint": "^8.57.0",
     "eslint-plugin-ezlint": "^1.2.0",
-    "husky": "^8.0.3",
-    "prettier": "^3.1.0",
-    "tsup": "^8.0.1"
+    "husky": "^9.0.11",
+    "prettier": "^3.2.5",
+    "tsup": "^8.0.2"
   },
   "bugs": {
     "url": "https://github.com/talkohavy/filters/issues",
