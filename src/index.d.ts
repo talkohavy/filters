@@ -28,15 +28,15 @@ export type CompareOperators =
 
 export type FilterScheme = Array<Partial<FilterChild> & AndOperator & OrOperator>;
 
-export class Filterer implements IFilterer {
-  constructor(props: { filterScheme: FilterScheme });
-
+export interface IFilterer {
   applyFilters(props: { data: Array<any> }): Array<any>;
 
   changeSchema(props: { filterScheme: FilterScheme }): void;
 }
 
-export interface IFilterer {
+export class Filterer implements IFilterer {
+  constructor(props: { filterScheme: FilterScheme });
+
   applyFilters(props: { data: Array<any> }): Array<any>;
 
   changeSchema(props: { filterScheme: FilterScheme }): void;

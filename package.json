@@ -3,7 +3,10 @@
   "version": "1.0.27",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
-  "keywords": ["filter", "talkohavy"],
+  "keywords": [
+    "filter",
+    "talkohavy"
+  ],
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
@@ -26,7 +29,9 @@
     "prepare": "husky install"
   },
   "sideEffects": false,
-  "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
+  "contributors": [
+    "Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/talkohavy/filters"
@@ -40,7 +45,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.5.2",
     "eslint": "^8.55.0",
-    "eslint-plugin-ezlint": "^1.0.14",
+    "eslint-plugin-ezlint": "^1.2.0",
     "husky": "^8.0.3",
     "prettier": "^3.1.0",
     "tsup": "^8.0.1"
