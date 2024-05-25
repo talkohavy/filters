@@ -1,13 +1,13 @@
 import assert from 'assert/strict';
 import { describe, it } from 'node:test';
 import { Filterer } from '../src/index.js';
-import { data } from './constants.js';
+import { data } from './test.constants.js';
 
-/** @typedef {import('../src').Filter} Filter */
+/** @typedef {import('../src').FilterScheme} FilterScheme */
 
 describe('Filterer Class', () => {
   it('Simple single filter should pass', () => {
-    /** @type {Filter} */
+    /** @type {FilterScheme} */
     const filterScheme = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
 
     const filterer = new Filterer({ filterScheme });
@@ -30,7 +30,7 @@ describe('Filterer Class', () => {
   });
 
   it('The implicit AND form filter should pass', () => {
-    /** @type {Filter} */
+    /** @type {FilterScheme} */
     const filterScheme = [
       { fieldName: 'name', value: 'Dan', operator: 'startsWith' },
       { fieldName: 'total', value: 13.8, operator: 'gte' },
@@ -56,7 +56,7 @@ describe('Filterer Class', () => {
   });
 
   it('The explicit AND form filter should pass', () => {
-    /** @type {Filter} */
+    /** @type {FilterScheme} */
     const filterScheme = [
       {
         AND: [
@@ -85,7 +85,7 @@ describe('Filterer Class', () => {
   });
 
   it('Complex filter with AND & OR', () => {
-    /** @type {Filter} */
+    /** @type {FilterScheme} */
     const filterScheme = [
       {
         AND: [
@@ -126,7 +126,7 @@ describe('Filterer Class', () => {
   });
 
   it('Changing schema should pass', () => {
-    /** @type {Filter} */
+    /** @type {FilterScheme} */
     const filterScheme = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
 
     const filterer = new Filterer({ filterScheme });
@@ -147,6 +147,9 @@ describe('Filterer Class', () => {
 
     assert.deepStrictEqual(actual, expected);
 
+    /**
+     * @type {FilterScheme}
+     */
     const filterScheme2 = [
       { fieldName: 'name', value: 'Dan', operator: 'startsWith' },
       { fieldName: 'total', value: 13.8, operator: 'gte' },
