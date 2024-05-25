@@ -3,7 +3,10 @@
   "version": "1.0.27",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
-  "keywords": ["filter", "talkohavy"],
+  "keywords": [
+    "filter",
+    "talkohavy"
+  ],
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
@@ -29,7 +32,9 @@
     "old-way-postversion": "git push && git push --tags && cd dist && npm publish"
   },
   "sideEffects": false,
-  "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
+  "contributors": [
+    "Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/talkohavy/filters"
@@ -43,6 +48,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.6.1",
     "@changesets/cli": "^2.27.3",
+    "@types/node": "^20.12.12",
     "eslint": "^8.57.0",
     "eslint-plugin-ezlint": "^1.2.0",
     "husky": "^9.0.11",

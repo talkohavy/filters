@@ -36,6 +36,7 @@
         "noCommaOperator": "off",
         "useSingleVarDeclarator": "off",
         "noParameterAssign": "off",
+        "useNodejsImportProtocol": "off",
         "noVar": "off"
       }
     }

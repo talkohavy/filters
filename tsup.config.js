@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs, { cpSync } from 'fs';
 import { defineConfig } from 'tsup';
 
 const outDir = 'dist';
@@ -21,9 +21,11 @@ const tsupConfig = defineConfig((_options) => ({
   async onSuccess() {
     copyTheReadmeFile();
 
-    // copyTheNpmrcFile();
+    copyAndManipulateThePackageJsonFile();
 
-    copyThePackageJsonFile();
+    copyChangesetDirectory();
+
+    copyNpmIgnore();
 
     // Step 5: run the cleanup function
     return () => {
@@ -39,13 +41,7 @@ function copyTheReadmeFile() {
   readStreamReadmeMd.pipe(writeStreamReadmeMd);
 }
 
-// function copyTheNpmrcFile() {
-//   const readStreamNpmrc = fs.createReadStream('./.npmrc');
-//   const writeStreamNpmrc = fs.createWriteStream(`./${outDir}/.npmrc`);
-//   readStreamNpmrc.pipe(writeStreamNpmrc);
-// }
-
-function copyThePackageJsonFile() {
+function copyAndManipulateThePackageJsonFile() {
   const packageJson = JSON.parse(fs.readFileSync('./package.json').toString());
 
   // - Remove all scripts
@@ -56,6 +52,16 @@ function copyThePackageJsonFile() {
   packageJson.publishConfig.access = 'public';
 
   fs.writeFileSync(`./${outDir}/package.json`, JSON.stringify(packageJson));
+}
+
+function copyChangesetDirectory() {
+  console.log('- Step 5: copy the .changeset directory');
+  cpSync('.changeset', `${outDir}/.changeset`, { recursive: true });
+}
+
+function copyNpmIgnore() {
+  console.log('- Step 6: copy the .npmignore file');
+  cpSync('.npmignore', `${outDir}/.npmignore`);
 }
 
 export default tsupConfig;
