@@ -1,5 +1,11 @@
 # @talkohavy/filters
 
+## 1.0.30
+
+### Patch Changes
+
+- d9ba0b7: using changesets/cli now
+
 ## 1.0.29
 
 ### Patch Changes
