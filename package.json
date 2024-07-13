@@ -1,16 +1,19 @@
 {
   "name": "@talkohavy/filters",
-  "version": "1.0.27",
+  "version": "1.0.30",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
-  "keywords": ["filter", "talkohavy"],
-  "main": "index.js",
+  "keywords": [
+    "filter",
+    "talkohavy"
+  ],
+  "main": "lib/index.js",
   "types": "index.d.ts",
   "type": "module",
   "exports": {
     ".": {
-      "import": "./index.js",
-      "require": "./index.cjs"
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
     }
   },
   "scripts": {
@@ -18,14 +21,20 @@
     "format": "biome format --verbose ./src",
     "format-prettier": "prettier . --check",
     "format-prettier-fix": "prettier . --write",
-    "build": "tsup --config tsup.config.js",
+    "build": "node ./build.config.js",
     "test": "node --test",
-    "preversion": "npm test",
-    "version": "npm run format-prettier-fix && npm run build",
-    "postversion": "git push && git push --tags && cd dist && npm publish"
+    "cs-add": "pnpm changeset add",
+    "cs-status": "pnpm changeset status --verbose",
+    "cs-bump": "npm test && pnpm changeset version",
+    "cs-publish": "npm run build && cd dist && pnpm changeset publish",
+    "old-way-preversion": "npm test",
+    "old-way-version": "npm run format-prettier-fix && npm run build",
+    "old-way-postversion": "git push && git push --tags && cd dist && npm publish"
   },
   "sideEffects": false,
-  "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
+  "contributors": [
+    "Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/talkohavy/filters"
@@ -38,11 +47,14 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.6.1",
+    "@changesets/cli": "^2.27.3",
+    "@types/node": "^20.12.12",
     "eslint": "^8.57.0",
     "eslint-plugin-ezlint": "^1.2.0",
+    "glob": "^10.4.1",
     "husky": "^9.0.11",
     "prettier": "^3.2.5",
-    "tsup": "^8.0.2"
+    "typescript": "^5.4.5"
   },
   "bugs": {
     "url": "https://github.com/talkohavy/filters/issues",
