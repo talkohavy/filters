@@ -3,17 +3,18 @@
   "version": "1.0.30",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
-  "keywords": [
-    "filter",
-    "talkohavy"
-  ],
-  "main": "lib/index.js",
-  "types": "index.d.ts",
+  "keywords": ["filter", "talkohavy"],
   "type": "module",
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.cjs"
+      "import": {
+        "import": "./lib/index.js",
+        "types": "./index.d.ts"
+      },
+      "require": {
+        "import": "./lib/index.cjs",
+        "types": "./index.d.ts"
+      }
     }
   },
   "scripts": {
@@ -32,9 +33,7 @@
     "old-way-postversion": "git push && git push --tags && cd dist && npm publish"
   },
   "sideEffects": false,
-  "contributors": [
-    "Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"
-  ],
+  "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
   "repository": {
     "type": "git",
     "url": "https://github.com/talkohavy/filters"
