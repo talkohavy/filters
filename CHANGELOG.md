@@ -1,5 +1,11 @@
 # @talkohavy/filters
 
+## 1.0.31
+
+### Patch Changes
+
+- a5fbe3d: fixed issue with types
+
 ## 1.0.30
 
 ### Patch Changes
