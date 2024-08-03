@@ -10,13 +10,13 @@
     // -----------------------------------
     "target": "ESNext", // default value is "ES3"
     "jsx": "react-jsx",
-    "lib": ["ES2022"], // adding the "DOM" library helps vs-code to recognize the window & document objects.
+    "lib": ["ESNext"], // adding the "DOM" library helps vs-code to recognize the window & document objects.
 
     // ------------------
     // Section 3: Modules
     // ------------------
     "module": "ESNext",
-    "moduleResolution": "Node", // Possible values: "Node", "Node16", "NodeNext"
+    "moduleResolution": "NodeNext", // Possible values: "Node", "Node16", "NodeNext"
     "resolveJsonModule": true,
     "baseUrl": "./",
     "paths": {},
@@ -79,9 +79,7 @@
     // -----------------------
     // Section 8: Completeness
     // -----------------------
-    "skipLibCheck": true,
-
-    "ignoreDeprecations": "5.0"
+    "skipLibCheck": true
   },
   "compileOnSave": true,
   "exclude": ["node_modules"],
