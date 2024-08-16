@@ -3,10 +3,7 @@
   "version": "1.0.31",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
-  "keywords": [
-    "filter",
-    "talkohavy"
-  ],
+  "keywords": ["filter", "talkohavy"],
   "type": "module",
   "exports": {
     ".": {
@@ -20,6 +17,7 @@
       }
     }
   },
+  "files": ["hello.js"],
   "scripts": {
     "lint": "eslint -c ./.eslintrc.json \"./src/**/*.ts\"",
     "format": "biome format --verbose ./src",
@@ -30,15 +28,13 @@
     "cs-add": "pnpm changeset add",
     "cs-status": "pnpm changeset status --verbose",
     "cs-bump": "npm test && pnpm changeset version",
-    "cs-publish": "npm run build && cd dist && pnpm changeset publish",
+    "cs-pub": "npm run build && cd dist && pnpm changeset publish",
     "old-way-preversion": "npm test",
     "old-way-version": "npm run format-prettier-fix && npm run build",
     "old-way-postversion": "git push && git push --tags && cd dist && npm publish"
   },
   "sideEffects": false,
-  "contributors": [
-    "Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"
-  ],
+  "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
   "repository": {
     "type": "git",
     "url": "https://github.com/talkohavy/filters"
