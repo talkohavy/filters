@@ -8,11 +8,11 @@
   "exports": {
     ".": {
       "import": {
-        "import": "./lib/index.js",
+        "import": "./index.js",
         "types": "./index.d.ts"
       },
       "require": {
-        "import": "./lib/index.cjs",
+        "import": "./index.cjs",
         "types": "./index.d.ts"
       }
     }
