@@ -1,5 +1,11 @@
 # @talkohavy/filters
 
+## 1.0.33
+
+### Patch Changes
+
+- added lvlup to the project
+
 ## 1.0.32
 
 ### Patch Changes
