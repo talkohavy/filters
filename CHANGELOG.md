@@ -1,5 +1,11 @@
 # @talkohavy/filters
 
+## 1.0.34
+
+### Patch Changes
+
+- project is ready to be published as typescript with lvlup
+
 ## 1.0.33
 
 ### Patch Changes
