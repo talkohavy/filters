@@ -1,10 +1,18 @@
-/**
- * @typedef {import('./index').IFilterer} IFilterer
- * @typedef {import('./index').FilterScheme} FilterScheme
- */
+import { RelationOperators } from '../constants';
+import type {
+  ApplyFiltersProps,
+  BasicCompareOperatorProps,
+  BuildShouldItemPassProps,
+  ChangeSchemaProps,
+  CreateBooleanFunctionProps,
+  CustomCompareOperatorProps,
+  ExtractNestedValueFromItemProps,
+  FiltererProps,
+  KeyExistsProps,
+  SingleItemCompareOperatorProps,
+} from './types';
 
 /**
- * @implements {IFilterer}
  * @description
  * Imagine a tree, with multiple levels (at least 1), where the root is at the top.
  * A tree is built from nodes and arcs.
@@ -53,53 +61,55 @@
  * console.log('filteredData is:', filteredData);
  */
 class Filterer {
-  RELATION_OPERATORS = { AND: 'AND', OR: 'OR' };
-  #compareOperators;
+  #compareOperators: any;
   #shouldItemPass;
 
-  /** @param {{filterScheme: FilterScheme}} props */
-  constructor({ filterScheme }) {
+  constructor(props: FiltererProps) {
+    const { filterScheme } = props;
+
     this.#compareOperators = this.#buildCompareOperators();
     this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
   }
 
-  /**
-   * @param {{ data: Array<any> }} props
-   * @returns { Array<any> } Returns the data filtered according to a filters' schema.
-   */
-  applyFilters({ data }) {
+  applyFilters(props: ApplyFiltersProps): Array<any> {
+    const { data } = props;
+
     const filteredData = data.filter(this.#shouldItemPass);
 
     return filteredData;
   }
 
-  changeSchema({ filterScheme }) {
+  changeSchema(props: ChangeSchemaProps) {
+    const { filterScheme } = props;
+
     this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
   }
 
-  #buildShouldItemPass({ filterScheme, relationOperator = this.RELATION_OPERATORS.AND }) {
+  #buildShouldItemPass(props: BuildShouldItemPassProps) {
+    const { filterScheme, relationOperator = RelationOperators.AND } = props;
+
     // Step 1: create a booleanFunc for each node at the current tree level
-    const filterFunctions = filterScheme.map((filter) => {
-      if (filter.AND ?? filter.OR) {
+    const filterFunctions: Array<any> = filterScheme.map((filter) => {
+      if (RelationOperators.AND in filter || RelationOperators.OR in filter) {
         // This node is a relationOperation! 1. Attach a relation operation to it. 2. Keep going down further and get the array of nested filters.
-        const relationOperator = filter.AND ? this.RELATION_OPERATORS.AND : this.RELATION_OPERATORS.OR;
-        return this.#buildShouldItemPass({ filterScheme: filter[relationOperator], relationOperator });
+        const relationOperator = RelationOperators.AND in filter ? RelationOperators.AND : RelationOperators.OR;
+        return this.#buildShouldItemPass({ filterScheme: (filter as any)[relationOperator], relationOperator });
       }
       // This node is a leaf/filter! Attach a Boolean function to it.
-      const booleanFunc = this.#createBooleanFunction(filter);
+      const booleanFunc = this.#createBooleanFunction(filter as any);
 
-      return filter.NOT ? this.#compareOperators.applyNot(booleanFunc) : booleanFunc;
+      return 'NOT' in filter ? this.#compareOperators.applyNot(booleanFunc) : booleanFunc;
     });
 
     // Step 2: apply the relation operator on all nodes on this floor level
-    if (relationOperator === this.RELATION_OPERATORS.OR) {
-      return (item) => filterFunctions.some((filter) => filter(item));
+    if (relationOperator === RelationOperators.OR) {
+      return (item: any) => filterFunctions.some((filter) => filter(item));
     }
 
-    return (item) => filterFunctions.every((filter) => filter(item));
+    return (item: any) => filterFunctions.every((filter) => filter(item));
   }
 
-  #createBooleanFunction(filter) {
+  #createBooleanFunction(filter: CreateBooleanFunctionProps) {
     const { fieldName, operator, value, fn: customFunction } = filter;
 
     // Edge case 1: decide true or false only based on 'value'
@@ -107,9 +117,8 @@ class Filterer {
     if (isValueBased) return () => this.#compareOperators[operator]({ itemValue: value, fn: customFunction });
 
     // Normal case: decide true or false only based on 'value'
-    return (item) => {
+    return (item: any) => {
       try {
-        // biome-ignore lint: I need this var
         var { itemValue, lastItem, lastKey } = this.#extractNestedValueFromItem({ item, fieldName });
       } catch (_error) {
         return false;
@@ -119,7 +128,9 @@ class Filterer {
     };
   }
 
-  #extractNestedValueFromItem({ item, fieldName }) {
+  #extractNestedValueFromItem(props: ExtractNestedValueFromItemProps) {
+    const { item, fieldName } = props;
+
     const fieldParts = fieldName?.split('.');
     const lastKey = fieldParts.at(-1);
     let itemValue = item;
@@ -135,27 +146,28 @@ class Filterer {
 
   #buildCompareOperators() {
     // Two-values comparison:
-    const equal = ({ itemValue, value }) => itemValue === value;
-    // biome-ignore lint: I need this soft equal
-    const softEqual = ({ itemValue, value }) => itemValue == value;
-    const gt = ({ itemValue, value }) => itemValue > value;
-    const gte = ({ itemValue, value }) => itemValue >= value;
-    const lt = ({ itemValue, value }) => itemValue < value;
-    const lte = ({ itemValue, value }) => itemValue <= value;
-    const startsWith = ({ itemValue, value }) => itemValue.startsWith(value);
-    const endsWith = ({ itemValue, value }) => itemValue.endsWith(value);
-    const includes = ({ itemValue, value }) => itemValue.includes(value);
-    const includesCaseInsensitive = ({ itemValue, value }) =>
+    const equal = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue === value;
+    const softEqual = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue == value;
+    const gt = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue > value;
+    const gte = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue >= value;
+    const lt = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue < value;
+    const lte = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue <= value;
+    const startsWith = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue.startsWith(value);
+    const endsWith = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue.endsWith(value);
+    const includes = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue.includes(value);
+    const includesCaseInsensitive = ({ itemValue, value }: BasicCompareOperatorProps) =>
       itemValue?.toLowerCase()?.includes?.(value?.toLowerCase());
-    const custom = ({ itemValue, value, fn }) => fn(itemValue, value);
+    const custom = ({ itemValue, value, fn }: CustomCompareOperatorProps) => fn(itemValue, value);
+
     // One-value Comparison:
-    const isEmptyString = ({ itemValue }) => itemValue === '';
-    const isNull = ({ itemValue }) => itemValue === null;
-    const isNullish = ({ itemValue }) => itemValue == null;
-    const isFalsy = ({ itemValue }) => !itemValue;
-    const isTruthy = ({ itemValue }) => itemValue;
-    const keyExists = ({ key, item }) => key in item;
-    const applyNot = (fn) => (item) => !fn(item);
+    const isEmptyString = ({ itemValue }: SingleItemCompareOperatorProps) => itemValue === '';
+    const isNull = ({ itemValue }: SingleItemCompareOperatorProps) => itemValue === null;
+    const isNullish = ({ itemValue }: SingleItemCompareOperatorProps) => itemValue == null;
+    const isFalsy = ({ itemValue }: SingleItemCompareOperatorProps) => !itemValue;
+    const isTruthy = ({ itemValue }: SingleItemCompareOperatorProps) => itemValue;
+    const keyExists = ({ key, item }: KeyExistsProps) => key in item;
+    const applyNot = (fn: (item: any) => boolean) => (item: any) => !fn(item);
+
     // Aliases:
     const exists = isTruthy;
     const equals = equal;

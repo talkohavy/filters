@@ -11,7 +11,8 @@
         "noExplicitAny": "off",
         "noGlobalIsNan": "off",
         "noAssignInExpressions": "off",
-        "noArrayIndexKey": "off"
+        "noArrayIndexKey": "off",
+        "noDoubleEquals": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "off"
@@ -38,8 +39,7 @@
         "noParameterAssign": "off",
         "useNodejsImportProtocol": "off",
         "noVar": "off",
-        "noNonNullAssertion": "off",
-        "lint/suspicious/noDoubleEquals": "off"
+        "noNonNullAssertion": "off"
       }
     }
   },
