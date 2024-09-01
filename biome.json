@@ -38,7 +38,8 @@
         "noParameterAssign": "off",
         "useNodejsImportProtocol": "off",
         "noVar": "off",
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "off",
+        "lint/suspicious/noDoubleEquals": "off"
       }
     }
   },

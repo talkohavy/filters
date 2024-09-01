@@ -20,6 +20,7 @@
   "files": ["hello.js"],
   "scripts": {
     "lint": "eslint -c ./.eslintrc.json \"./src/**/*.ts\"",
+    "typecheck": "tsc -p tsconfig.json",
     "format": "biome format --verbose ./src",
     "format-prettier": "prettier . --check",
     "format-prettier-fix": "prettier . --write",
