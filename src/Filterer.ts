@@ -1,15 +1,15 @@
-import {
-  type ApplyFiltersProps,
-  type BasicCompareOperatorProps,
-  type BuildShouldItemPassProps,
-  type ChangeSchemaProps,
-  type CreateBooleanFunctionProps,
-  type CustomCompareOperatorProps,
-  type ExtractNestedValueFromItemProps,
-  type FiltererProps,
-  type KeyExistsProps,
-  RelationOperators,
-  type SingleItemCompareOperatorProps,
+import { RelationOperators } from './constants';
+import type {
+  ApplyFiltersProps,
+  BasicCompareOperatorProps,
+  BuildShouldItemPassProps,
+  ChangeSchemaProps,
+  CreateBooleanFunctionProps,
+  CustomCompareOperatorProps,
+  ExtractNestedValueFromItemProps,
+  FiltererProps,
+  KeyExistsProps,
+  SingleItemCompareOperatorProps,
 } from './types';
 
 /**

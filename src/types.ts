@@ -1,3 +1,5 @@
+import type { RelationOperators } from './constants';
+
 type AndOperator = { AND?: FilterParent };
 
 type OrOperator = { OR?: FilterParent };
@@ -78,8 +80,3 @@ export type KeyExistsProps = {
   key: string;
   item: any;
 };
-
-export enum RelationOperators {
-  AND = 'AND',
-  OR = 'OR',
-}
