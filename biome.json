@@ -15,7 +15,8 @@
         "noDoubleEquals": "off"
       },
       "correctness": {
-        "useExhaustiveDependencies": "off"
+        "useExhaustiveDependencies": "off",
+        "noInnerDeclarations": "off"
       },
       "complexity": {
         "noForEach": "off",

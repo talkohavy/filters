@@ -1,10 +1,14 @@
-import type { RelationOperators } from './constants';
+type AndOperator = { AND?: FilterParent };
 
-type AndOperator = { AND?: Array<Partial<FilterChild> & AndOperator & OrOperator> };
+type OrOperator = { OR?: FilterParent };
 
-type OrOperator = { OR?: Array<Partial<FilterChild> & AndOperator & OrOperator> };
+type FilterParent = Array<Partial<FilterChild> & AndOperator & OrOperator>;
 
 type FilterChild = { fieldName: string; value: any; operator: CompareOperators; key: string; NOT: boolean };
+
+export type FiltererProps = {
+  filterScheme: FilterScheme;
+};
 
 export type CompareOperators =
   | 'equal'
@@ -28,18 +32,18 @@ export type CompareOperators =
   | 'keyExists'
   | 'applyNot';
 
-export type FilterScheme = Array<Partial<FilterChild> & AndOperator & OrOperator>;
+export type FilterScheme = Array<FilterParent | FilterChild>;
 
 export type ApplyFiltersProps = {
   data: Array<any>;
 };
 
 export type ChangeSchemaProps = {
-  filterScheme: any;
+  filterScheme: FilterScheme;
 };
 
 export type BuildShouldItemPassProps = {
-  filterScheme: Array<any>;
+  filterScheme: FilterScheme;
   relationOperator?: RelationOperators;
 };
 
@@ -74,3 +78,8 @@ export type KeyExistsProps = {
   key: string;
   item: any;
 };
+
+export enum RelationOperators {
+  AND = 'AND',
+  OR = 'OR',
+}
