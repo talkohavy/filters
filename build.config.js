@@ -28,7 +28,7 @@ function cleanDistDirectory() {
 
 function buildWithTsc() {
   console.log('- Step 2: build with tsc');
-  execSync('tsc -p jsconfig.json');
+  execSync('tsc -p tsconfig.json');
 }
 
 function copyReadmeFile() {
