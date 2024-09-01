@@ -29,9 +29,9 @@
     "cs-status": "pnpm changeset status --verbose",
     "cs-bump": "npm test && pnpm changeset version",
     "cs-pub": "npm run build && cd dist && pnpm changeset publish",
-    "old-way-preversion": "npm test",
-    "old-way-version": "npm run format-prettier-fix && npm run build",
-    "old-way-postversion": "git push && git push --tags && cd dist && npm publish"
+    "preversion": "npm run format-prettier-fix",
+    "version": "npm run format-prettier-fix",
+    "postversion": "npm run format-prettier-fix"
   },
   "sideEffects": false,
   "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
