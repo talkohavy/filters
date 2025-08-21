@@ -8,10 +8,6 @@ type FilterParent = Array<Partial<FilterChild> & AndOperator & OrOperator>;
 
 type FilterChild = { fieldName: string; value: any; operator: CompareOperators; key: string; NOT: boolean };
 
-export type FiltererProps = {
-  filterScheme: FilterScheme;
-};
-
 export type CompareOperators =
   | 'equal'
   | 'equals'

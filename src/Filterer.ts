@@ -7,7 +7,7 @@ import type {
   CreateBooleanFunctionProps,
   CustomCompareOperatorProps,
   ExtractNestedValueFromItemProps,
-  FiltererProps,
+  FilterScheme,
   KeyExistsProps,
   SingleItemCompareOperatorProps,
 } from './types';
@@ -64,9 +64,7 @@ class Filterer {
   #compareOperators: any;
   #shouldItemPass;
 
-  constructor(props: FiltererProps) {
-    const { filterScheme } = props;
-
+  constructor(filterScheme: FilterScheme) {
     this.#compareOperators = this.#buildCompareOperators();
     this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
   }
