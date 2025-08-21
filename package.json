@@ -25,7 +25,7 @@
     "tsc": "tsc -p tsconfig.json",
     "format-prettier": "prettier . --check",
     "format-prettier-fix": "prettier . --write",
-    "build": "node ./build.config.js",
+    "build": "node ./build.config.mjs",
     "test": "node --test"
   },
   "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
