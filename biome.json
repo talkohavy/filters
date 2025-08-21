@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
   "files": {
-    "experimentalScannerIgnores": ["dist", "sw.js"]
+    "experimentalScannerIgnores": ["dist"]
   },
   "assist": {
     "actions": {
