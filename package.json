@@ -44,7 +44,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.1.2",
-    "@changesets/cli": "^2.29.5",
     "@eslint/js": "^9.31.0",
     "@types/node": "^24.1.0",
     "eslint": "^9.31.0",
