@@ -62,6 +62,7 @@ type FilterChild = {
  * - `lt`: Less than
  * - `lte`: Less than or equal
  * - `between`: Value is between two bounds (inclusive)
+ * - `in`: Value is a member of an array
  *
  * **String Operators:**
  * - `startsWith`: String starts with value
@@ -90,6 +91,7 @@ export type CompareOperators =
   | 'lt'
   | 'lte'
   | 'between'
+  | 'in'
   | 'startsWith'
   | 'endsWith'
   | 'includes'
