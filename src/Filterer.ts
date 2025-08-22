@@ -1,17 +1,14 @@
 import { RelationOperators } from './constants';
 import type {
   ApplyFiltersProps,
-  BasicCompareOperatorProps,
   BuildShouldItemPassProps,
   CreateBooleanFunctionProps,
-  CustomCompareOperatorProps,
   ExtractNestedValueFromItemProps,
   FilterScheme,
-  KeyExistsProps,
-  SingleItemCompareOperatorProps,
 } from './types';
 import { validateFilterSchema, validateFieldPath } from './validation';
 import { FieldPathError, OperatorError } from './errors';
+import * as operators from './operators';
 
 /**
  * @description
@@ -192,54 +189,27 @@ class Filterer {
   }
 
   #buildCompareOperators() {
-    // Two-values comparison:
-    const equal = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue === value;
-    const softEqual = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue == value;
-    const gt = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue > value;
-    const gte = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue >= value;
-    const lt = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue < value;
-    const lte = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue <= value;
-    const startsWith = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue.startsWith(value);
-    const endsWith = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue.endsWith(value);
-    const includes = ({ itemValue, value }: BasicCompareOperatorProps) => itemValue.includes(value);
-    const includesCaseInsensitive = ({ itemValue, value }: BasicCompareOperatorProps) =>
-      itemValue?.toLowerCase()?.includes?.(value?.toLowerCase());
-    const custom = ({ itemValue, value, fn }: CustomCompareOperatorProps) => fn(itemValue, value);
-
-    // One-value Comparison:
-    const isEmptyString = ({ itemValue }: SingleItemCompareOperatorProps) => itemValue === '';
-    const isNull = ({ itemValue }: SingleItemCompareOperatorProps) => itemValue === null;
-    const isNullish = ({ itemValue }: SingleItemCompareOperatorProps) => itemValue == null;
-    const isFalsy = ({ itemValue }: SingleItemCompareOperatorProps) => !itemValue;
-    const isTruthy = ({ itemValue }: SingleItemCompareOperatorProps) => itemValue;
-    const keyExists = ({ key, item }: KeyExistsProps) => key in item;
-    const applyNot = (fn: (item: any) => boolean) => (item: any) => !fn(item);
-
-    // Aliases:
-    const exists = isTruthy;
-    const equals = equal;
-
     return {
-      equal,
-      equals,
-      softEqual,
-      gt,
-      gte,
-      lt,
-      lte,
-      startsWith,
-      endsWith,
-      includes,
-      includesCaseInsensitive,
-      custom,
-      isEmptyString,
-      isNull,
-      isNullish,
-      isFalsy,
-      isTruthy,
-      exists,
-      keyExists,
-      applyNot,
+      equal: operators.equal,
+      equals: operators.equals,
+      softEqual: operators.softEqual,
+      gt: operators.gt,
+      gte: operators.gte,
+      lt: operators.lt,
+      lte: operators.lte,
+      startsWith: operators.startsWith,
+      endsWith: operators.endsWith,
+      includes: operators.includes,
+      includesCaseInsensitive: operators.includesCaseInsensitive,
+      custom: operators.custom,
+      isEmptyString: operators.isEmptyString,
+      isNull: operators.isNull,
+      isNullish: operators.isNullish,
+      isFalsy: operators.isFalsy,
+      isTruthy: operators.isTruthy,
+      exists: operators.exists,
+      keyExists: operators.keyExists,
+      applyNot: operators.applyNot,
     };
   }
 }

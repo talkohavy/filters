@@ -92,22 +92,23 @@
 
 **Goal**: Split the large Filterer class without changing APIs
 
-- [ ] **Extract operator functions** (2025-08-22)
-  - [ ] Move comparison operators to separate file
-  - [ ] Move unary operators to separate file
-  - [ ] Create operator registry
-  - [ ] Keep the main Filterer class API unchanged
+- [x] **Extract operator functions** (2025-08-22)
+  - [x] Move comparison operators to separate file (`src/operators.ts`)
+  - [x] Move unary operators to separate file (`src/operators.ts`)
+  - [x] Create operator registry in Filterer
+  - [x] Keep the main Filterer class API unchanged
 
 - [ ] **Extract utilities** (2025-08-22)
   - [ ] Move value extraction logic to separate utility
   - [ ] Create helper functions for common operations
   - [ ] Maintain backward compatibility
 
-**Success Criteria**:
+**Success Criteria (partial):**
 
-- Cleaner, more maintainable code structure
+- Operator logic is modular and maintainable
 - No file exceeds 200 lines
 - All existing APIs work unchanged
+- All tests pass
 
 ### Phase 5: New Features (Breaking Changes OK)
 
