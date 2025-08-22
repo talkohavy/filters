@@ -121,8 +121,8 @@
   - [x] `in` operator for array membership (2025-08-22)
   - [x] `regex` operator for pattern matching (2025-08-22)
 
-- [ ] **Performance optimizations** (2025-08-22)
-  - [ ] Add memoization for repeated operations
+- [x] **Performance optimizations** (2025-08-22)
+  - [x] Add memoization for repeated filter operations (2025-08-22)
   - [ ] Optimize nested field extraction
   - [ ] Add benchmarking tests
 
