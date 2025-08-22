@@ -9,9 +9,9 @@
 import type { RelationOperators } from './constants';
 
 /**
- * Generic data item type - represents any object that can be filtered
+ * Generic data item type - represents any object or array that can be filtered
  */
-export type DataItem = Record<string, unknown>;
+export type DataItem = Record<string, unknown> | unknown[];
 
 /**
  * Logical operator for combining filter conditions with AND logic
@@ -26,7 +26,7 @@ type OrOperator<T extends DataItem = DataItem> = { OR?: FilterParent<T> };
 /**
  * Parent filter node that can contain multiple child conditions or operators
  */
-type FilterParent<T extends DataItem = DataItem> = Array<Partial<FilterChild> & AndOperator<T> & OrOperator<T>>;
+type FilterParent<T extends DataItem = DataItem> = Array<FilterChild | AndOperator<T> | OrOperator<T>>;
 
 /**
  * Individual filter condition that compares a field value using an operator
@@ -39,9 +39,13 @@ type FilterChild = {
   /** The comparison operator to use */
   operator: CompareOperators;
   /** @deprecated Legacy field, use fieldName instead */
-  key: string;
+  key?: string;
   /** Whether to negate the result of this condition */
-  NOT: boolean;
+  NOT?: boolean;
+  /** Optional custom comparison function for 'custom' operator */
+  fn?: (itemValue: unknown, filterValue: unknown) => boolean;
+  /** For 'applyNot' operator: the base operator to negate */
+  baseOperator?: CompareOperators;
 };
 
 /**
