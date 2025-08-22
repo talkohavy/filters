@@ -128,8 +128,8 @@ class Filterer {
 
     const fieldParts = fieldName?.split('.');
     const lastKey = fieldParts.at(-1);
-    let itemValue = item;
-    let lastItem = item;
+    let itemValue: any = item;
+    let lastItem: any = item;
 
     fieldParts.forEach((subKeyPart) => {
       lastItem = itemValue;
