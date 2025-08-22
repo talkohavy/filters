@@ -138,7 +138,7 @@
 
 - [x] **API Documentation** (2025-08-22)
   - [x] Complete JSDoc comments (2025-08-22)
-  - [ ] Generate TypeDoc documentation
+  - [x] Generate TypeDoc documentation (2025-08-22)
   - [x] Create usage examples (2025-08-22)
   - [x] Update README with new features (2025-08-22)
 
