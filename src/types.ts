@@ -69,6 +69,7 @@ type FilterChild = {
  * - `endsWith`: String ends with value
  * - `includes`: String contains value
  * - `includesCaseInsensitive`: Case-insensitive string contains
+ * - `regex`: String matches a regular expression
  *
  * **Special Operators:**
  * - `custom`: Use a custom comparison function
@@ -96,6 +97,7 @@ export type CompareOperators =
   | 'endsWith'
   | 'includes'
   | 'includesCaseInsensitive'
+  | 'regex'
   | 'custom'
   | 'isEmptyString'
   | 'isNull'

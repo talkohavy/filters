@@ -27,6 +27,7 @@ const VALID_OPERATORS: CompareOperators[] = [
   'endsWith',
   'includes',
   'includesCaseInsensitive',
+  'regex',
   'custom',
   'isEmptyString',
   'isNull',

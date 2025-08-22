@@ -11,6 +11,17 @@ import type {
 
 // Two-values comparison:
 /**
+ * Regex operator
+ * Returns true if itemValue matches the provided regex pattern
+ * value can be a RegExp or a string pattern
+ */
+export function regex({ itemValue, value }: BasicCompareOperatorProps) {
+  if (typeof itemValue !== 'string') return false;
+  if (value instanceof RegExp) return value.test(itemValue);
+  if (typeof value === 'string') return new RegExp(value).test(itemValue);
+  return false;
+}
+/**
  * Membership operator
  * Returns true if itemValue is included in value (array)
  * value must be an array
