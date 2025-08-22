@@ -10,6 +10,13 @@ import type {
 } from './types';
 
 // Two-values comparison:
+/**
+ * Strict inequality operator
+ * Returns true if itemValue !== value
+ */
+export function notEqual({ itemValue, value }: BasicCompareOperatorProps) {
+  return itemValue !== value;
+}
 export function equal({ itemValue, value }: BasicCompareOperatorProps) {
   return itemValue === value;
 }

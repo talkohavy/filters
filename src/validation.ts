@@ -15,6 +15,7 @@ import { SchemaValidationError, OperatorError, ParameterError } from './errors';
 const VALID_OPERATORS: CompareOperators[] = [
   'equal',
   'equals',
+  'notEqual',
   'softEqual',
   'gt',
   'gte',
