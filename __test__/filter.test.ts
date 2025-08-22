@@ -9,8 +9,7 @@ describe('Filterer Class', () => {
 
     const filterer = new Filterer(filterScheme);
     const actual = filterer.applyFilters({ data });
-
-    const expected = [
+    const expectedResult = [
       {
         id: 2,
         name: 'Tracey Bill',
@@ -23,7 +22,7 @@ describe('Filterer Class', () => {
       },
     ];
 
-    assert.deepStrictEqual(actual, expected);
+    assert.deepStrictEqual(actual, expectedResult);
   });
 
   it('The implicit AND form filter should pass', () => {
@@ -299,9 +298,9 @@ describe('Filterer Class', () => {
         // Item 2 (Tracey Bill) has orders.isVIP: null
         // Item 1 (Dander Mente) has no isVIP property (undefined)
         // Item 3 (Gina Doe) has no orders property (orders.isVIP is undefined)
-        assert.strictEqual(actual.length, 2);
+        assert.strictEqual(actual.length, 3);
         const names = actual.map((item) => item.name).sort();
-        assert.deepStrictEqual(names, ['Dander Mente', 'Tracey Bill']);
+        assert.deepStrictEqual(names, ['Dander Mente', 'Gina Doe', 'Tracey Bill']);
       });
 
       it('should filter using "isNullish" operator for undefined values', () => {
