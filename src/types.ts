@@ -61,6 +61,7 @@ type FilterChild = {
  * - `gte`: Greater than or equal
  * - `lt`: Less than
  * - `lte`: Less than or equal
+ * - `between`: Value is between two bounds (inclusive)
  *
  * **String Operators:**
  * - `startsWith`: String starts with value
@@ -88,6 +89,7 @@ export type CompareOperators =
   | 'gte'
   | 'lt'
   | 'lte'
+  | 'between'
   | 'startsWith'
   | 'endsWith'
   | 'includes'

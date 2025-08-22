@@ -11,6 +11,16 @@ import type {
 
 // Two-values comparison:
 /**
+ * Range operator
+ * Returns true if itemValue is between value[0] and value[1] (inclusive)
+ * value must be a two-element array: [min, max]
+ */
+export function between({ itemValue, value }: BasicCompareOperatorProps) {
+  if (!Array.isArray(value) || value.length !== 2) return false;
+  const [min, max] = value;
+  return itemValue >= min && itemValue <= max;
+}
+/**
  * Strict inequality operator
  * Returns true if itemValue !== value
  */

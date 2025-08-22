@@ -148,6 +148,7 @@ class Filterer {
       gte: operators.gte,
       lt: operators.lt,
       lte: operators.lte,
+  between: operators.between,
       startsWith: operators.startsWith,
       endsWith: operators.endsWith,
       includes: operators.includes,
