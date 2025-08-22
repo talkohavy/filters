@@ -81,6 +81,32 @@ const filterer = new Filterer({ filterScheme });
 const filteredData = filterer.applyFilters({ data: dummyData });
 
 console.log(filteredData);
+
+// --- New Operator Examples ---
+
+// notEqual
+const notEqualScheme = [
+  { fieldName: 'type', value: 'customer', operator: 'notEqual' },
+];
+console.log(new Filterer(notEqualScheme).applyFilters({ data: dummyData }));
+
+// between
+const betweenScheme = [
+  { fieldName: 'total', value: [10, 50], operator: 'between' },
+];
+console.log(new Filterer(betweenScheme).applyFilters({ data: dummyData }));
+
+// in
+const inScheme = [
+  { fieldName: 'type', value: ['customer', 'worker'], operator: 'in' },
+];
+console.log(new Filterer(inScheme).applyFilters({ data: dummyData }));
+
+// regex
+const regexScheme = [
+  { fieldName: 'name', value: '^Tr', operator: 'regex' },
+];
+console.log(new Filterer(regexScheme).applyFilters({ data: dummyData }));
 ```
 
 ## License

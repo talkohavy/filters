@@ -7,54 +7,35 @@ import { FieldPathError, OperatorError } from './errors';
 import * as operators from './operators';
 
 /**
- * @description
- * Imagine a tree, with multiple levels (at least 1), where the root is at the top.
- * A tree is built from nodes and arcs.
- * Each Node can hold 1 of 2 things:
- * 1. A relation operation (AND || OR)
- * 2. A boolean function ( (item) => Boolean )
- * You start from the top, and begin to go down, DFS style.
- * For every node in the tree, you mark whether it's a relation node, or a Boolean function node.
- * If it's a Boolean function node, it's a leaf!
- * If it's a relation node, it's a parent node! You keep going down to its children.
- * You are done when all nodes are marked, and you've basically created a schema tree to run an item on.
- * An item running on a schema tree with Boolean functions will basically have many boolean values propagating upwards,
- * until reaching the root node. Which ever value that reaches the node is essentially the result value for shouldItemPass.
+ * Filterer class for applying complex filter schemes to data arrays.
+ * Supports nested AND/OR logic, custom operators, and memoization for performance.
+ *
  * @example
- * // And the filterScheme looks like this:
  * const filterScheme = [
- *  {
- *    AND: [
- *      {
- *        OR: [
- *          { fieldName: 'name', value: 'Da', operator: 'startsWith' },
- *          {
- *            AND: [
- *              { fieldName: 'name', value: 'Tr', operator: 'startsWith' },
- *              { fieldName: 'id', value: 2, operator: 'equal' },
- *            ],
- *          },
- *        ],
- *      },
- *      { fieldName: 'total', value: 50, operator: 'gt' },
- *    ],
- *  },
+ *   { fieldName: 'name', value: 'Dan', operator: 'startsWith' },
+ *   { fieldName: 'total', value: 13.8, operator: 'gte' },
  * ];
- * @example
- * // Step 1: create a filters schema
- * const filtersScheme = [
- *   { fieldName: 'customer', value: 'T', operator: 'startsWith' },
- *   { fieldName: 'id', value: 3, operator: 'equal' },
- * ];
- *
- * // Step 2: create a Filterer class instance, and pass filtersScheme to it
- * const filterer = new Filterer({ filtersScheme });
- *
- * // Step 3: use the applyFilters method to filter the data
+ * const filterer = new Filterer(filterScheme);
  * const filteredData = filterer.applyFilters({ data });
- * console.log('filteredData is:', filteredData);
+ *
+ * @example
+ * // Nested logic
+ * const filterScheme = [
+ *   {
+ *     AND: [
+ *       { fieldName: 'total', operator: 'gt', value: 30 },
+ *       { fieldName: 'total', operator: 'lt', value: 30.2 },
+ *     ],
+ *   },
+ * ];
+ * const filterer = new Filterer(filterScheme);
+ * const filteredData = filterer.applyFilters({ data });
  */
 class Filterer {
+  /**
+   * Creates a new Filterer instance with a filter scheme.
+   * @param filterScheme - Array of filter conditions and logical groupings
+   */
   #compareOperators: any;
   #shouldItemPass;
 
@@ -67,6 +48,11 @@ class Filterer {
   }
 
   applyFilters(props: ApplyFiltersProps): Array<any> {
+    /**
+     * Filters the provided data array using the filter scheme.
+     * @param props - Object containing the data array to filter
+     * @returns Filtered array of items
+     */
     const { data } = props;
 
     const filteredData = data.filter(this.#shouldItemPass);
@@ -75,6 +61,10 @@ class Filterer {
   }
 
   changeSchema(filterScheme: FilterScheme): void {
+    /**
+     * Changes the filter scheme for this Filterer instance.
+     * @param filterScheme - New filter scheme to apply
+     */
     // Validate the new filter schema before applying
     validateFilterSchema(filterScheme);
 
