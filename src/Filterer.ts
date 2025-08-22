@@ -1,12 +1,7 @@
 import { RelationOperators } from './constants';
-import type {
-  ApplyFiltersProps,
-  BuildShouldItemPassProps,
-  CreateBooleanFunctionProps,
-  ExtractNestedValueFromItemProps,
-  FilterScheme,
-} from './types';
-import { validateFilterSchema, validateFieldPath } from './validation';
+import type { ApplyFiltersProps, BuildShouldItemPassProps, CreateBooleanFunctionProps, FilterScheme } from './types';
+import { extractNestedValueFromItem } from './utils';
+import { validateFilterSchema } from './validation';
 import { FieldPathError, OperatorError } from './errors';
 import * as operators from './operators';
 
@@ -119,21 +114,16 @@ class Filterer {
     // Normal case: decide true or false based on extracted field value
     return (item: any) => {
       try {
-        var { itemValue, lastItem, lastKey } = this.#extractNestedValueFromItem({ item, fieldName });
+        var { itemValue, lastItem, lastKey } = extractNestedValueFromItem({ item, fieldName });
       } catch (error) {
-        // For field path errors, return false but could be made configurable
         if (error instanceof FieldPathError) {
           return false;
         }
-
-        // Re-throw other types of errors as they indicate more serious issues
         throw error;
       }
-
       try {
         return this.#compareOperators[operator]({ itemValue, value, fn: customFunction, item: lastItem, key: lastKey });
       } catch (error) {
-        // Operator errors should be more serious - they indicate configuration issues
         const errorMessage = error instanceof Error ? error.message : String(error);
         throw new OperatorError(`Operator '${operator}' failed: ${errorMessage}`, {
           operator,
@@ -146,47 +136,7 @@ class Filterer {
     };
   }
 
-  #extractNestedValueFromItem(props: ExtractNestedValueFromItemProps) {
-    const { item, fieldName } = props;
-
-    // Validate field path
-    validateFieldPath(fieldName);
-
-    const fieldParts = fieldName?.split('.');
-    const lastKey = fieldParts.at(-1);
-    let itemValue: any = item;
-    let lastItem: any = item;
-
-    try {
-      for (const subKeyPart of fieldParts) {
-        lastItem = itemValue;
-
-        if (itemValue == null) {
-          // If we encounter null/undefined in the middle of the path, we can't continue
-          // This is often expected (e.g., optional properties), so we return undefined
-          itemValue = undefined;
-          break;
-        }
-
-        itemValue = itemValue[subKeyPart];
-      }
-    } catch (error) {
-      // Re-throw FieldPathError as-is, wrap other errors
-      if (error instanceof FieldPathError) {
-        throw error;
-      }
-
-      const errorMessage = error instanceof Error ? error.message : String(error);
-
-      throw new FieldPathError(`Failed to navigate field path '${fieldName}': ${errorMessage}`, {
-        fieldPath: fieldName,
-        originalError: errorMessage,
-        item: typeof item === 'object' ? '[object]' : item,
-      });
-    }
-
-    return { itemValue, lastItem, lastKey };
-  }
+  // ...existing code...
 
   #buildCompareOperators() {
     return {

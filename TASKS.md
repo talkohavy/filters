@@ -98,14 +98,15 @@
   - [x] Create operator registry in Filterer
   - [x] Keep the main Filterer class API unchanged
 
-- [ ] **Extract utilities** (2025-08-22)
-  - [ ] Move value extraction logic to separate utility
-  - [ ] Create helper functions for common operations
-  - [ ] Maintain backward compatibility
+- [x] **Extract utilities** (2025-08-22)
+  - [x] Move value extraction logic to separate utility (`src/utils.ts`)
+  - [x] Update Filterer to use utility for value extraction
+  - [x] Maintain backward compatibility
 
-**Success Criteria (partial):**
+**Success Criteria (complete):**
 
 - Operator logic is modular and maintainable
+- Utility logic is separated and reusable
 - No file exceeds 200 lines
 - All existing APIs work unchanged
 - All tests pass
