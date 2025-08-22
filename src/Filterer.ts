@@ -10,6 +10,8 @@ import type {
   KeyExistsProps,
   SingleItemCompareOperatorProps,
 } from './types';
+import { validateFilterSchema, validateFieldPath } from './validation';
+import { FieldPathError, OperatorError } from './errors';
 
 /**
  * @description
@@ -64,6 +66,9 @@ class Filterer {
   #shouldItemPass;
 
   constructor(filterScheme: FilterScheme) {
+    // Validate the filter schema before processing
+    validateFilterSchema(filterScheme);
+
     this.#compareOperators = this.#buildCompareOperators();
     this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
   }
@@ -77,6 +82,9 @@ class Filterer {
   }
 
   changeSchema(filterScheme: FilterScheme): void {
+    // Validate the new filter schema before applying
+    validateFilterSchema(filterScheme);
+
     this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
   }
 
@@ -111,30 +119,74 @@ class Filterer {
     const isValueBased = !('fieldName' in filter);
     if (isValueBased) return () => this.#compareOperators[operator]({ itemValue: value, fn: customFunction });
 
-    // Normal case: decide true or false only based on 'value'
+    // Normal case: decide true or false based on extracted field value
     return (item: any) => {
       try {
         var { itemValue, lastItem, lastKey } = this.#extractNestedValueFromItem({ item, fieldName });
-      } catch (_error) {
-        return false;
+      } catch (error) {
+        // For field path errors, return false but could be made configurable
+        if (error instanceof FieldPathError) {
+          return false;
+        }
+
+        // Re-throw other types of errors as they indicate more serious issues
+        throw error;
       }
 
-      return this.#compareOperators[operator]({ itemValue, value, fn: customFunction, item: lastItem, key: lastKey });
+      try {
+        return this.#compareOperators[operator]({ itemValue, value, fn: customFunction, item: lastItem, key: lastKey });
+      } catch (error) {
+        // Operator errors should be more serious - they indicate configuration issues
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        throw new OperatorError(`Operator '${operator}' failed: ${errorMessage}`, {
+          operator,
+          fieldName,
+          itemValue,
+          filterValue: value,
+          originalError: errorMessage,
+        });
+      }
     };
   }
 
   #extractNestedValueFromItem(props: ExtractNestedValueFromItemProps) {
     const { item, fieldName } = props;
 
+    // Validate field path
+    validateFieldPath(fieldName);
+
     const fieldParts = fieldName?.split('.');
     const lastKey = fieldParts.at(-1);
     let itemValue: any = item;
     let lastItem: any = item;
 
-    fieldParts.forEach((subKeyPart) => {
-      lastItem = itemValue;
-      itemValue = itemValue[subKeyPart];
-    });
+    try {
+      for (const subKeyPart of fieldParts) {
+        lastItem = itemValue;
+
+        if (itemValue == null) {
+          // If we encounter null/undefined in the middle of the path, we can't continue
+          // This is often expected (e.g., optional properties), so we return undefined
+          itemValue = undefined;
+          break;
+        }
+
+        itemValue = itemValue[subKeyPart];
+      }
+    } catch (error) {
+      // Re-throw FieldPathError as-is, wrap other errors
+      if (error instanceof FieldPathError) {
+        throw error;
+      }
+
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
+      throw new FieldPathError(`Failed to navigate field path '${fieldName}': ${errorMessage}`, {
+        fieldPath: fieldName,
+        originalError: errorMessage,
+        item: typeof item === 'object' ? '[object]' : item,
+      });
+    }
 
     return { itemValue, lastItem, lastKey };
   }
