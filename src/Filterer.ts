@@ -3,7 +3,6 @@ import type {
   ApplyFiltersProps,
   BasicCompareOperatorProps,
   BuildShouldItemPassProps,
-  ChangeSchemaProps,
   CreateBooleanFunctionProps,
   CustomCompareOperatorProps,
   ExtractNestedValueFromItemProps,
@@ -77,9 +76,7 @@ class Filterer {
     return filteredData;
   }
 
-  changeSchema(props: ChangeSchemaProps) {
-    const { filterScheme } = props;
-
+  changeSchema(filterScheme: FilterScheme): void {
     this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
   }
 

@@ -1,16 +1,13 @@
 import assert from 'assert/strict';
-import { describe, it } from 'node:test';
-import { Filterer } from '../src/index.js';
-import { data } from './test.constants.js';
-
-/** @typedef {import('../src').FilterScheme} FilterScheme */
+import { Filterer } from '../src/index';
+import { data } from './mocks/constants';
+import type { FilterScheme } from '../src/types';
 
 describe('Filterer Class', () => {
   it('Simple single filter should pass', () => {
-    /** @type {FilterScheme} */
-    const filterScheme = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
+    const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
 
-    const filterer = new Filterer({ filterScheme });
+    const filterer = new Filterer(filterScheme);
     const actual = filterer.applyFilters({ data });
 
     const expected = [
@@ -30,13 +27,12 @@ describe('Filterer Class', () => {
   });
 
   it('The implicit AND form filter should pass', () => {
-    /** @type {FilterScheme} */
-    const filterScheme = [
+    const filterScheme: FilterScheme = [
       { fieldName: 'name', value: 'Dan', operator: 'startsWith' },
       { fieldName: 'total', value: 13.8, operator: 'gte' },
     ];
 
-    const filterer = new Filterer({ filterScheme });
+    const filterer = new Filterer(filterScheme);
     const actual = filterer.applyFilters({ data });
 
     const expected = [
@@ -56,8 +52,7 @@ describe('Filterer Class', () => {
   });
 
   it('The explicit AND form filter should pass', () => {
-    /** @type {FilterScheme} */
-    const filterScheme = [
+    const filterScheme: FilterScheme = [
       {
         AND: [
           { fieldName: 'total', operator: 'gt', value: 30 },
@@ -66,7 +61,7 @@ describe('Filterer Class', () => {
       },
     ];
 
-    const filterer = new Filterer({ filterScheme });
+    const filterer = new Filterer(filterScheme);
     const actual = filterer.applyFilters({ data });
 
     const expected = [
@@ -85,8 +80,7 @@ describe('Filterer Class', () => {
   });
 
   it('Complex filter with AND & OR', () => {
-    /** @type {FilterScheme} */
-    const filterScheme = [
+    const filterScheme: FilterScheme = [
       {
         AND: [
           { fieldName: 'total', operator: 'gt', value: 50 },
@@ -106,7 +100,7 @@ describe('Filterer Class', () => {
       },
     ];
 
-    const filterer = new Filterer({ filterScheme });
+    const filterer = new Filterer(filterScheme);
     const actual = filterer.applyFilters({ data });
 
     const expected = [
@@ -126,10 +120,9 @@ describe('Filterer Class', () => {
   });
 
   it('Changing schema should pass', () => {
-    /** @type {FilterScheme} */
-    const filterScheme = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
+    const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
 
-    const filterer = new Filterer({ filterScheme });
+    const filterer = new Filterer(filterScheme);
     const actual = filterer.applyFilters({ data });
 
     const expected = [
@@ -147,10 +140,7 @@ describe('Filterer Class', () => {
 
     assert.deepStrictEqual(actual, expected);
 
-    /**
-     * @type {FilterScheme}
-     */
-    const filterScheme2 = [
+    const filterScheme2: FilterScheme = [
       { fieldName: 'name', value: 'Dan', operator: 'startsWith' },
       { fieldName: 'total', value: 13.8, operator: 'gte' },
     ];
@@ -168,7 +158,7 @@ describe('Filterer Class', () => {
       },
     ];
 
-    filterer.changeSchema({ filterScheme: filterScheme2 });
+    filterer.changeSchema(filterScheme2);
     const actual2 = filterer.applyFilters({ data });
 
     assert.deepStrictEqual(actual2, expected2);
