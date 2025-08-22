@@ -11,6 +11,14 @@ import type {
 
 // Two-values comparison:
 /**
+ * Membership operator
+ * Returns true if itemValue is included in value (array)
+ * value must be an array
+ */
+export function inOperator({ itemValue, value }: BasicCompareOperatorProps) {
+  return Array.isArray(value) && value.includes(itemValue);
+}
+/**
  * Range operator
  * Returns true if itemValue is between value[0] and value[1] (inclusive)
  * value must be a two-element array: [min, max]

@@ -22,6 +22,7 @@ const VALID_OPERATORS: CompareOperators[] = [
   'lt',
   'lte',
   'between',
+  'in',
   'startsWith',
   'endsWith',
   'includes',
