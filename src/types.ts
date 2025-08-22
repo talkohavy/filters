@@ -36,10 +36,6 @@ export type ApplyFiltersProps = {
   data: Array<any>;
 };
 
-export type ChangeSchemaProps = {
-  filterScheme: FilterScheme;
-};
-
 export type BuildShouldItemPassProps = {
   filterScheme: FilterScheme;
   relationOperator?: RelationOperators;
