@@ -1,61 +1,155 @@
 # Tasks: @talkohavy/filters
 
-**Last Updated**: August 21, 2025
+**Last Updated**: August 22, 2025
 
-## 🎯 High Priority Tasks
+## 🎯 Phased Approach - Small, Focused Iterations
 
-### Phase 1: Foundation & Architecture (Breaking Changes)
+### Phase 1: Basic Type Safety (Non-Breaking)
 
-#### Code Structure & Modularization
+**Goal**: Improve TypeScript types without changing any APIs
 
-- [ ] **Split Filterer class into modules** (2025-08-21)
-  - [ ] Extract comparison operators into separate modules
-  - [ ] Create FilterEngine core class
-  - [ ] Create SchemaValidator utility
-  - [ ] Create ValueExtractor utility
-  - [ ] Ensure no file exceeds 500 lines
+- [ ] **Improve type definitions** (2025-08-22)
+  - [ ] Replace `any` types with proper generics in type definitions
+  - [ ] Add strict operator type unions
+  - [ ] Create better interfaces for filter conditions
+  - [ ] Add JSDoc comments for better IntelliSense
+  - [ ] Keep all existing APIs unchanged
 
-#### Type Safety Improvements
+**Success Criteria**:
 
-- [ ] **Remove all `any` types** (2025-08-21)
-  - [ ] Implement proper generic types for data arrays
-  - [ ] Create strict interfaces for filter schemas
-  - [ ] Add type constraints for operator parameters
-  - [ ] Implement proper return types
+- All existing tests pass unchanged
+- Better TypeScript IntelliSense
+- No breaking changes
 
-- [ ] **Improve type definitions** (2025-08-21)
-  - [ ] Create branded types for field names
-  - [ ] Add union types for operator names
-  - [ ] Implement conditional types for operator parameters
-  - [ ] Add utility types for filter transformations
+### Phase 2: Test Infrastructure (Non-Breaking)
 
-#### Error Handling & Validation
+**Goal**: Modernize and expand the test suite
 
-- [ ] **Implement robust error handling** (2025-08-21)
-  - [ ] Create custom error classes
-  - [ ] Add meaningful error messages
-  - [ ] Validate filter schemas at runtime
-  - [ ] Handle edge cases gracefully
+- [ ] **Convert tests to TypeScript** (2025-08-22)
+  - [ ] Rename .js test files to .ts
+  - [ ] Fix TypeScript imports and types
+  - [ ] Ensure all existing tests still pass
 
-- [ ] **Add schema validation** (2025-08-21)
-  - [ ] Install and configure Zod for runtime validation
-  - [ ] Create schema validators for FilterScheme
-  - [ ] Validate operator parameters
-  - [ ] Add validation for nested field paths
+- [ ] **Expand test coverage** (2025-08-22)
+  - [ ] Add tests for edge cases and error conditions
+  - [ ] Test all comparison operators individually
+  - [ ] Add tests for nested field paths
+  - [ ] Test complex AND/OR combinations
 
-#### Build & Package Configuration
+**Success Criteria**:
 
-- [ ] **Update build configuration** (2025-08-21)
-  - [ ] Configure proper ESM/CJS dual builds
-  - [ ] Set up TypeScript declaration generation
+- All tests run with TypeScript
+- > 90% code coverage
+- No breaking changes
+
+### Phase 3: Error Handling (Non-Breaking)
+
+**Goal**: Add better error handling and validation
+
+- [ ] **Create custom error classes** (2025-08-22)
+  - [ ] FilterError base class
+  - [ ] SchemaValidationError for invalid schemas
+  - [ ] OperatorError for operator issues
+  - [ ] Meaningful error messages with context
+
+- [ ] **Improve error handling in existing code** (2025-08-22)
+  - [ ] Better error messages for invalid field paths
+  - [ ] Graceful handling of missing properties
+  - [ ] Validate operator parameters at runtime
+
+**Success Criteria**:
+
+- Better error messages for developers
+- Graceful failure modes
+- No breaking changes to existing APIs
+
+### Phase 4: Code Organization (Non-Breaking)
+
+**Goal**: Split the large Filterer class without changing APIs
+
+- [ ] **Extract operator functions** (2025-08-22)
+  - [ ] Move comparison operators to separate file
+  - [ ] Move unary operators to separate file
+  - [ ] Create operator registry
+  - [ ] Keep the main Filterer class API unchanged
+
+- [ ] **Extract utilities** (2025-08-22)
+  - [ ] Move value extraction logic to separate utility
+  - [ ] Create helper functions for common operations
+  - [ ] Maintain backward compatibility
+
+**Success Criteria**:
+
+- Cleaner, more maintainable code structure
+- No file exceeds 200 lines
+- All existing APIs work unchanged
+
+### Phase 5: New Features (Breaking Changes OK)
+
+**Goal**: Add new operators and capabilities
+
+- [ ] **Add missing operators** (2025-08-22)
+  - [ ] `notEqual` operator
+  - [ ] `between` operator for ranges
+  - [ ] `in` operator for array membership
+  - [ ] `regex` operator for pattern matching
+
+- [ ] **Performance optimizations** (2025-08-22)
+  - [ ] Add memoization for repeated operations
+  - [ ] Optimize nested field extraction
+  - [ ] Add benchmarking tests
+
+**Success Criteria**:
+
+- New operators work correctly
+- Performance improvements measurable
+- Breaking changes clearly documented
+
+### Phase 6: Documentation & Polish
+
+**Goal**: Complete documentation and examples
+
+- [ ] **API Documentation** (2025-08-22)
+  - [ ] Complete JSDoc comments
+  - [ ] Generate TypeDoc documentation
+  - [ ] Create usage examples
+  - [ ] Update README with new features
+
+- [ ] **Migration Guide** (2025-08-22)
+  - [ ] Document any breaking changes
+  - [ ] Provide migration examples
+  - [ ] Version compatibility matrix
+
+**Success Criteria**:
+
+- Complete API documentation
+- Clear migration path
+- Ready for major version release
   - [ ] Add minification for production builds
   - [ ] Update package.json exports
 
-- [ ] **Fix package.json issues** (2025-08-21)
-  - [ ] Fix the malformed "type" field on line 33
-  - [ ] Update export paths to match new structure
-  - [ ] Add proper main/module/types fields
-  - [ ] Update scripts for new build process
+## 📝 Notes
+
+**Phased Approach Strategy:**
+
+- **Small iterations**: Each phase focuses on one specific improvement
+- **Non-breaking first**: Phases 1-4 maintain full backward compatibility
+- **Testing throughout**: Every phase validates that existing functionality works
+- **Clear success criteria**: Each phase has measurable outcomes
+- **Breaking changes last**: Only Phase 5 introduces potential breaking changes
+
+**Why This Approach:**
+
+- **Lower risk**: Smaller changes are easier to review and test
+- **Easier to debug**: If something breaks, we know exactly what caused it
+- **Better for learning**: Each phase teaches us more about the codebase
+- **Flexible**: We can stop, adjust, or reorder phases based on what we learn
+
+---
+
+## ✅ Completed Tasks
+
+_Completed tasks will be moved here with completion dates._
 
 ## 🧪 Testing & Quality
 
