@@ -134,14 +134,6 @@ export type CompareOperators =
 export type FilterScheme<T extends DataItem = DataItem> = Array<FilterParent<T> | FilterChild>;
 
 /**
- * Options for the applyFilters method
- */
-export type ApplyFiltersProps<T extends DataItem = DataItem> = {
-  /** Array of data items to filter */
-  data: Array<T>;
-};
-
-/**
  * Options for changing the filter schema
  */
 export type ChangeSchemaProps<T extends DataItem = DataItem> = {
@@ -153,7 +145,7 @@ export type ChangeSchemaProps<T extends DataItem = DataItem> = {
  * Internal props for building the filter function
  * @internal
  */
-export type BuildShouldItemPassProps<T extends DataItem = DataItem> = {
+export type BuildPredicateFromFilterSchemeProps<T extends DataItem = DataItem> = {
   /** The filter schema to build function from */
   filterScheme: FilterScheme<T>;
   /** The logical operator to use for combining conditions */
