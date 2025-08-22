@@ -115,11 +115,11 @@
 
 **Goal**: Add new operators and capabilities
 
-- [ ] **Add missing operators** (2025-08-22)
-  - [ ] `notEqual` operator
-  - [ ] `between` operator for ranges
-  - [ ] `in` operator for array membership
-  - [ ] `regex` operator for pattern matching
+- [x] **Add missing operators** (2025-08-22)
+  - [x] `notEqual` operator (2025-08-22)
+  - [x] `between` operator for ranges (2025-08-22)
+  - [x] `in` operator for array membership (2025-08-22)
+  - [x] `regex` operator for pattern matching (2025-08-22)
 
 - [ ] **Performance optimizations** (2025-08-22)
   - [ ] Add memoization for repeated operations
