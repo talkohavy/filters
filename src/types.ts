@@ -53,6 +53,7 @@ type FilterChild = {
  *
  * **Equality Operators:**
  * - `equal`, `equals`: Strict equality (===)
+ * - `notEqual`: Strict inequality (!==)
  * - `softEqual`: Loose equality (==)
  *
  * **Numeric Operators:**
@@ -81,6 +82,7 @@ type FilterChild = {
 export type CompareOperators =
   | 'equal'
   | 'equals'
+  | 'notEqual'
   | 'softEqual'
   | 'gt'
   | 'gte'

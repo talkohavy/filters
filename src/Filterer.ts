@@ -142,6 +142,7 @@ class Filterer {
     return {
       equal: operators.equal,
       equals: operators.equals,
+      notEqual: operators.notEqual,
       softEqual: operators.softEqual,
       gt: operators.gt,
       gte: operators.gte,
