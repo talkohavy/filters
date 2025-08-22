@@ -55,15 +55,11 @@ export function validateFilterSchema<T extends DataItem = DataItem>(filterScheme
     });
   }
 
-  if (filterScheme.length === 0) {
-    // Empty schema is valid - it means no filtering
-    return;
-  }
+  if (filterScheme.length === 0) return; // <--- Empty schema is valid - it means no filtering
 
-  for (let i = 0; i < filterScheme.length; i++) {
-    const filter = filterScheme[i];
+  filterScheme.forEach((filter, i) => {
     validateFilterNode(filter, `filterScheme[${i}]`);
-  }
+  });
 }
 
 /**

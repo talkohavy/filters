@@ -1,5 +1,5 @@
 import { RelationOperators } from './constants';
-import type { ApplyFiltersProps, BuildShouldItemPassProps, CreateBooleanFunctionProps, FilterScheme } from './types';
+import type { BuildPredicateFromFilterSchemeProps, CreateBooleanFunctionProps, DataItem, FilterScheme } from './types';
 import { extractNestedValueFromItem } from './utils';
 import { memoizeFilter } from './memoize';
 import { validateFilterSchema } from './validation';
@@ -31,47 +31,43 @@ import * as operators from './operators';
  * const filterer = new Filterer(filterScheme);
  * const filteredData = filterer.applyFilters({ data });
  */
-class Filterer {
+export class Filterer {
+  private predicate: (item: any) => boolean;
+  private readonly compareOperators: any;
+
   /**
    * Creates a new Filterer instance with a filter scheme.
    * @param filterScheme - Array of filter conditions and logical groupings
    */
-  #compareOperators: any;
-  #shouldItemPass;
-
   constructor(filterScheme: FilterScheme) {
-    // Validate the filter schema before processing
     validateFilterSchema(filterScheme);
 
-    this.#compareOperators = this.#buildCompareOperators();
-    this.#shouldItemPass = memoizeFilter(this.#buildShouldItemPass({ filterScheme }));
+    this.compareOperators = operators;
+    this.predicate = memoizeFilter(this.buildPredicateFromFilterScheme({ filterScheme }));
   }
 
-  applyFilters(props: ApplyFiltersProps): Array<any> {
-    /**
-     * Filters the provided data array using the filter scheme.
-     * @param props - Object containing the data array to filter
-     * @returns Filtered array of items
-     */
-    const { data } = props;
-
-    const filteredData = data.filter(this.#shouldItemPass);
+  /**
+   * Filters the provided data array using the filter scheme.
+   * @param props - Object containing the data array to filter
+   * @returns Filtered array of items
+   */
+  applyFilters<T extends DataItem = DataItem>(data: Array<T>): Array<any> {
+    const filteredData = data.filter(this.predicate);
 
     return filteredData;
   }
 
+  /**
+   * Changes the filter scheme for this Filterer instance.
+   * @param filterScheme - New filter scheme to apply
+   */
   changeSchema(filterScheme: FilterScheme): void {
-    /**
-     * Changes the filter scheme for this Filterer instance.
-     * @param filterScheme - New filter scheme to apply
-     */
-    // Validate the new filter schema before applying
     validateFilterSchema(filterScheme);
 
-    this.#shouldItemPass = memoizeFilter(this.#buildShouldItemPass({ filterScheme }));
+    this.predicate = memoizeFilter(this.buildPredicateFromFilterScheme({ filterScheme }));
   }
 
-  #buildShouldItemPass(props: BuildShouldItemPassProps) {
+  private buildPredicateFromFilterScheme(props: BuildPredicateFromFilterSchemeProps) {
     const { filterScheme, relationOperator = RelationOperators.AND } = props;
 
     // Step 1: create a booleanFunc for each node at the current tree level
@@ -79,12 +75,15 @@ class Filterer {
       if (RelationOperators.AND in filter || RelationOperators.OR in filter) {
         // This node is a relationOperation! 1. Attach a relation operation to it. 2. Keep going down further and get the array of nested filters.
         const relationOperator = RelationOperators.AND in filter ? RelationOperators.AND : RelationOperators.OR;
-        return this.#buildShouldItemPass({ filterScheme: (filter as any)[relationOperator], relationOperator });
+        return this.buildPredicateFromFilterScheme({
+          filterScheme: (filter as any)[relationOperator],
+          relationOperator,
+        });
       }
       // This node is a leaf/filter! Attach a Boolean function to it.
-      const booleanFunc = this.#createBooleanFunction(filter as any);
+      const booleanFunc = this.createBooleanFunction(filter as any);
 
-      return 'NOT' in filter ? this.#compareOperators.applyNot(booleanFunc) : booleanFunc;
+      return 'NOT' in filter ? this.compareOperators.applyNot(booleanFunc) : booleanFunc;
     });
 
     // Step 2: apply the relation operator on all nodes on this floor level
@@ -95,12 +94,12 @@ class Filterer {
     return (item: any) => filterFunctions.every((filter) => filter(item));
   }
 
-  #createBooleanFunction(filter: CreateBooleanFunctionProps) {
+  private createBooleanFunction(filter: CreateBooleanFunctionProps) {
     const { fieldName, operator, value, fn: customFunction } = filter;
 
     // Edge case 1: decide true or false only based on 'value'
     const isValueBased = !('fieldName' in filter);
-    if (isValueBased) return () => this.#compareOperators[operator]({ itemValue: value, fn: customFunction });
+    if (isValueBased) return () => this.compareOperators[operator]({ itemValue: value, fn: customFunction });
 
     // Normal case: decide true or false based on extracted field value
     return (item: any) => {
@@ -113,7 +112,7 @@ class Filterer {
         throw error;
       }
       try {
-        return this.#compareOperators[operator]({ itemValue, value, fn: customFunction, item: lastItem, key: lastKey });
+        return this.compareOperators[operator]({ itemValue, value, fn: customFunction, item: lastItem, key: lastKey });
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         throw new OperatorError(`Operator '${operator}' failed: ${errorMessage}`, {
@@ -126,37 +125,4 @@ class Filterer {
       }
     };
   }
-
-  // ...existing code...
-
-  #buildCompareOperators() {
-    return {
-      equal: operators.equal,
-      equals: operators.equals,
-      notEqual: operators.notEqual,
-      softEqual: operators.softEqual,
-      gt: operators.gt,
-      gte: operators.gte,
-      lt: operators.lt,
-      lte: operators.lte,
-      between: operators.between,
-      in: operators.inOperator,
-      regex: operators.regex,
-      startsWith: operators.startsWith,
-      endsWith: operators.endsWith,
-      includes: operators.includes,
-      includesCaseInsensitive: operators.includesCaseInsensitive,
-      custom: operators.custom,
-      isEmptyString: operators.isEmptyString,
-      isNull: operators.isNull,
-      isNullish: operators.isNullish,
-      isFalsy: operators.isFalsy,
-      isTruthy: operators.isTruthy,
-      exists: operators.exists,
-      keyExists: operators.keyExists,
-      applyNot: operators.applyNot,
-    };
-  }
 }
-
-export { Filterer };
