@@ -1,6 +1,7 @@
 import { RelationOperators } from './constants';
 import type { ApplyFiltersProps, BuildShouldItemPassProps, CreateBooleanFunctionProps, FilterScheme } from './types';
 import { extractNestedValueFromItem } from './utils';
+import { memoizeFilter } from './memoize';
 import { validateFilterSchema } from './validation';
 import { FieldPathError, OperatorError } from './errors';
 import * as operators from './operators';
@@ -62,7 +63,7 @@ class Filterer {
     validateFilterSchema(filterScheme);
 
     this.#compareOperators = this.#buildCompareOperators();
-    this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
+    this.#shouldItemPass = memoizeFilter(this.#buildShouldItemPass({ filterScheme }));
   }
 
   applyFilters(props: ApplyFiltersProps): Array<any> {
@@ -77,7 +78,7 @@ class Filterer {
     // Validate the new filter schema before applying
     validateFilterSchema(filterScheme);
 
-    this.#shouldItemPass = this.#buildShouldItemPass({ filterScheme });
+    this.#shouldItemPass = memoizeFilter(this.#buildShouldItemPass({ filterScheme }));
   }
 
   #buildShouldItemPass(props: BuildShouldItemPassProps) {
