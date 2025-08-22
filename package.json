@@ -4,10 +4,7 @@
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
   "license": "MIT",
-  "keywords": [
-    "filter",
-    "talkohavy"
-  ],
+  "keywords": ["filter", "talkohavy"],
   "exports": {
     ".": {
       "import": {
@@ -31,9 +28,7 @@
     "build": "node ./build.config.mjs",
     "test": "jest"
   },
-  "contributors": [
-    "Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"
-  ],
+  "contributors": ["Tal Kohavy <talkohavy@gmail.com> (@Tal Kohavy)"],
   "repository": {
     "type": "git",
     "url": "https://github.com/talkohavy/filters"
