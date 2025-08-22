@@ -150,6 +150,7 @@ class Filterer {
       lte: operators.lte,
       between: operators.between,
       in: operators.inOperator,
+      regex: operators.regex,
       startsWith: operators.startsWith,
       endsWith: operators.endsWith,
       includes: operators.includes,
