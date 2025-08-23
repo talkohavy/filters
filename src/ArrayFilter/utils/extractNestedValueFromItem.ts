@@ -1,6 +1,16 @@
-import type { ExtractNestedValueFromItemProps } from './types';
-import { validateFieldPath } from './validation';
-import { FieldPathError } from './errors';
+import { FieldPathError } from '../../common/errors';
+import { validateFieldPath } from './validateFieldPath';
+
+/**
+ * Internal props for extracting nested values from objects
+ * @internal
+ */
+type ExtractNestedValueFromItemProps<T = any> = {
+  /** The data item to extract value from */
+  item: T;
+  /** The field path (e.g., 'user.profile.name') */
+  fieldName: string;
+};
 
 /**
  * Extracts a nested value from an object using a dot-separated field path.
@@ -9,7 +19,8 @@ import { FieldPathError } from './errors';
  * Throws FieldPathError for invalid paths.
  */
 const fieldPathCache = new Map<string, string[]>();
-function extractNestedValueFromItem(props: ExtractNestedValueFromItemProps) {
+
+export function extractNestedValueFromItem(props: ExtractNestedValueFromItemProps) {
   const { item, fieldName } = props;
 
   validateFieldPath(fieldName);
@@ -51,5 +62,3 @@ function extractNestedValueFromItem(props: ExtractNestedValueFromItemProps) {
 
   return { itemValue, lastItem, lastKey };
 }
-
-export { extractNestedValueFromItem };
