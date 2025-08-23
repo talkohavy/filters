@@ -47,17 +47,17 @@ export type ChildFilter = ExistsFilterChild | OperatorFilterChild | CustomPredic
 /**
  * Logical operator for combining filter conditions with AND logic
  */
-type AndOperator = { AND: ParentFilter };
+type AndFilter = { AND: Array<RecursiveFilter>; OR?: never; fieldName?: never };
 
 /**
  * Logical operator for combining filter conditions with OR logic
  */
-type OrOperator = { OR: ParentFilter };
+type OrFilter = { OR: Array<RecursiveFilter>; AND?: never; fieldName?: never };
 
 /**
  * Parent filter node that can contain multiple child conditions or operators
  */
-type ParentFilter = Array<ChildFilter | AndOperator | OrOperator>;
+type RecursiveFilter = ChildFilter | AndFilter | OrFilter;
 
 /**
  * Main filter schema type - an array of filter conditions and logical groupings
@@ -82,4 +82,4 @@ type ParentFilter = Array<ChildFilter | AndOperator | OrOperator>;
  * ];
  * ```
  */
-export type FilterScheme = ParentFilter | ChildFilter;
+export type FilterScheme = RecursiveFilter | Array<RecursiveFilter>;
