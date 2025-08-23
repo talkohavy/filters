@@ -1,7 +1,6 @@
 import { RelationOperators } from '../constants';
-import { extractNestedValueFromItem } from './utils/extractNestedValueFromItem';
 import { memoizeFilter } from './utils/memoize';
-import { FieldPathError, OperatorError } from '../common/errors';
+import { OperatorError } from '../common/errors';
 import { operators, type IOperators } from '../Operators';
 import type { BuildPredicateFromFilterSchemeProps } from './ArrayFilter.interface';
 import type {
@@ -12,6 +11,7 @@ import type {
   OperatorFilterChild,
 } from '../FilterScheme/types';
 import { filterValidator, type FilterValidator } from '../FilterScheme/filter-validator';
+import { validateFieldPath } from './utils/validateFieldPath';
 
 /**
  * Filterer class for applying complex filter schemes to data arrays.
@@ -42,6 +42,13 @@ export class ArrayFilter {
   private predicate: (item: any) => boolean;
   private readonly compareOperators: IOperators;
   private readonly filterValidator: FilterValidator;
+  /**
+   * Extracts a nested value from an object using a dot-separated field path.
+   * Uses a static cache for field path splits to optimize repeated extraction.
+   * Returns the value, the last traversed object, and the last key.
+   * Throws FieldPathError for invalid paths.
+   */
+  private fieldPathCache = new Map<string, string[]>();
 
   /**
    * Creates a new Filterer instance with a filter scheme.
@@ -117,22 +124,11 @@ export class ArrayFilter {
     return !(RelationOperators.AND in filter) && !(RelationOperators.OR in filter);
   }
 
-  private getNestedValue(item: any, fieldName: string): { itemValue: any; lastItem: any; lastKey: string | undefined } {
-    try {
-      const result = extractNestedValueFromItem({ item, fieldName });
-      return result;
-    } catch (error) {
-      if (error instanceof FieldPathError) return {} as any;
-
-      throw error;
-    }
-  }
-
   private getCustomPredicateBooleanFunction(filter: CustomPredicateFilterChild) {
     const { fieldName, value } = filter;
 
     return (item: any) => {
-      const { itemValue } = this.getNestedValue(item, fieldName);
+      const { itemValue } = this.extractNestedValueFromItem(item, fieldName);
 
       try {
         return filter.fn!(itemValue, value);
@@ -153,7 +149,7 @@ export class ArrayFilter {
     const value = 'value' in filter ? filter.value : undefined;
 
     return (item: T) => {
-      const { itemValue, lastItem, lastKey } = this.getNestedValue(item, fieldName);
+      const { itemValue, lastItem, lastKey } = this.extractNestedValueFromItem(item, fieldName);
 
       try {
         const selectedOperator = this.compareOperators[operator].bind(this.compareOperators);
@@ -174,5 +170,29 @@ export class ArrayFilter {
 
   private applyNot(booleanFunc: (item: any) => boolean) {
     return (item: any) => !booleanFunc(item);
+  }
+
+  private extractNestedValueFromItem(item: any, fieldName: string) {
+    validateFieldPath(fieldName);
+
+    let fieldParts = this.fieldPathCache.get(fieldName);
+
+    if (!fieldParts) {
+      fieldParts = fieldName.split('.');
+      this.fieldPathCache.set(fieldName, fieldParts);
+    }
+
+    const lastKey = fieldParts.at(-1);
+    let itemValue: any = item;
+    let lastItem: any = item;
+
+    try {
+      for (const subKeyPart of fieldParts) {
+        lastItem = itemValue;
+        itemValue = itemValue[subKeyPart];
+      }
+    } catch {}
+
+    return { itemValue, lastItem, lastKey };
   }
 }
