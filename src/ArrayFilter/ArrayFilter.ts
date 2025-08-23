@@ -38,7 +38,7 @@ import { filterValidator, type FilterValidator } from '../FilterScheme/filter-va
  * const filterer = new Filterer(filterScheme);
  * const filteredData = filterer.applyFilters({ data });
  */
-export class Filterer {
+export class ArrayFilter {
   private predicate: (item: any) => boolean;
   private readonly compareOperators: IOperators;
   private readonly filterValidator: FilterValidator;
