@@ -1,10 +1,18 @@
+// Main
 export { ArrayFilter } from './ArrayFilter';
 
-// Export error classes for better error handling
-// export { FilterError, SchemaValidationError, OperatorError, FieldPathError, ParameterError } from './common/errors';
+// Filter Scheme
+export type {
+  FilterScheme,
+  ChildFilter,
+  CustomPredicateFilterChild,
+  ExistsFilterChild,
+  OperatorFilterChild,
+} from './FilterScheme/types';
 
-// Export validation utilities (optional - for advanced users)
-// export { validateFilterSchema, validateOperator, validateFieldPath } from './common/validations';
+// Relation Operators
+export { RelationOperators } from './common/constants';
 
 // Re-export types for convenience
-// export type { FilterScheme, ApplyFiltersProps, CompareOperators, DataItem } from './types';
+export type { RelationOperatorsValues } from './common/constants';
+export type { OperatorNames } from './Operators/operators';
