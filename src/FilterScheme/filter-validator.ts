@@ -1,5 +1,5 @@
 import { OperatorError, SchemaValidationError } from '../common/errors';
-import { RelationOperators } from '../constants';
+import { RelationOperators } from '../common/constants';
 import { VALID_OPERATORS, type OperatorNames } from '../Operators';
 import type { FilterScheme } from './types';
 

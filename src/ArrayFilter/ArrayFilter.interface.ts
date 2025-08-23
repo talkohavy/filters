@@ -1,4 +1,4 @@
-import type { RelationOperatorsValues } from '../constants';
+import type { RelationOperatorsValues } from '../common/constants';
 import type { FilterScheme } from '../FilterScheme/types';
 import type { OperatorNames } from '../Operators/operators';
 

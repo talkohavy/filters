@@ -1,4 +1,4 @@
-import { RelationOperators } from '../constants';
+import { RelationOperators } from '../common/constants';
 import { OperatorError } from '../common/errors';
 import { operators, type IOperators } from '../Operators';
 import type { BuildPredicateFromFilterSchemeProps } from './ArrayFilter.interface';
