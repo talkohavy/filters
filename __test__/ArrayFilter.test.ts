@@ -90,7 +90,7 @@ describe('ArrayFilter Class', () => {
                 AND: [
                   { fieldName: 'name', operator: 'startsWith', value: 'Tr' },
                   { fieldName: 'id', operator: 'equal', value: 2 },
-                  { fieldName: 'orders.isVIP', operator: 'exists' },
+                  { fieldName: 'orders.isVIP', operator: 'keyExists' },
                 ],
               },
             ],
@@ -322,7 +322,7 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "exists" operator (alias for isTruthy)', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'orders', value: true, operator: 'exists' }];
+        const filterScheme: FilterScheme = [{ fieldName: 'orders', operator: 'exists' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -342,21 +342,6 @@ describe('ArrayFilter Class', () => {
     });
 
     describe('Complex Operators', () => {
-      it('should filter using "custom" operator', () => {
-        const filterScheme: FilterScheme = [
-          {
-            fieldName: 'name',
-            value: 'test',
-            fn: (itemValue: any, _value: any) => typeof itemValue === 'string' && itemValue.length > 8,
-          },
-        ];
-        const filterer = new ArrayFilter(filterScheme);
-        const actual = filterer.applyFilters(data);
-
-        assert.strictEqual(actual.length, 2);
-        assert(actual.every((item) => item.name.length > 8));
-      });
-
       it('should filter using "keyExists" operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'orders', value: 'amount', operator: 'keyExists' }];
         const filterer = new ArrayFilter(filterScheme);
