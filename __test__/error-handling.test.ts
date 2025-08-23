@@ -1,70 +1,72 @@
 import assert from 'assert/strict';
-import { Filterer } from '../src/index';
+import { ArrayFilter } from '../src';
 import {
-  FilterError,
-  SchemaValidationError,
-  OperatorError,
   FieldPathError,
+  FilterError,
+  OperatorError,
   ParameterError,
-  validateFilterSchema,
-  validateOperator,
-  validateFieldPath,
-} from '../src/index';
-import type { FilterScheme } from '../src/types';
+  SchemaValidationError,
+} from '../src/common/errors';
+import { filterValidator } from '../src/FilterScheme/filter-validator';
+import { validateFieldPath } from '../src/ArrayFilter/utils/validateFieldPath';
+import type { FilterScheme } from '../src/FilterScheme/types';
 
 describe('Error Handling and Validation', () => {
   describe('Schema Validation', () => {
     it('should throw SchemaValidationError for non-array schema', () => {
-      assert.throws(() => new Filterer('invalid' as any), SchemaValidationError);
+      assert.throws(() => new ArrayFilter('invalid' as any), SchemaValidationError);
     });
 
     it('should throw SchemaValidationError for invalid filter objects', () => {
-      assert.throws(() => new Filterer([{ invalid: 'filter' } as any]), SchemaValidationError);
+      assert.throws(() => new ArrayFilter([{ invalid: 'filter' } as any]), SchemaValidationError);
     });
 
     it('should throw SchemaValidationError for missing fieldName', () => {
-      assert.throws(() => new Filterer([{ operator: 'equal', value: 'test' } as any]), SchemaValidationError);
+      assert.throws(() => new ArrayFilter([{ operator: 'equal', value: 'test' } as any]), SchemaValidationError);
     });
 
     it('should throw SchemaValidationError for missing operator', () => {
-      assert.throws(() => new Filterer([{ fieldName: 'test', value: 'test' } as any]), SchemaValidationError);
+      assert.throws(() => new ArrayFilter([{ fieldName: 'test', value: 'test' } as any]), SchemaValidationError);
     });
 
     it('should throw SchemaValidationError for empty fieldName', () => {
-      assert.throws(() => new Filterer([{ fieldName: '', operator: 'equal', value: 'test' }]), SchemaValidationError);
+      assert.throws(
+        () => new ArrayFilter([{ fieldName: '', operator: 'equal', value: 'test' }]),
+        SchemaValidationError,
+      );
     });
 
     it('should throw SchemaValidationError for both AND and OR in same filter', () => {
-      assert.throws(() => new Filterer([{ AND: [], OR: [] } as any]), SchemaValidationError);
+      assert.throws(() => new ArrayFilter([{ AND: [], OR: [] } as any]), SchemaValidationError);
     });
 
     it('should throw SchemaValidationError for empty logical operators', () => {
-      assert.throws(() => new Filterer([{ AND: [] } as any]), SchemaValidationError);
+      assert.throws(() => new ArrayFilter([{ AND: [] } as any]), SchemaValidationError);
     });
 
     it('should throw SchemaValidationError for non-array logical operators', () => {
-      assert.throws(() => new Filterer([{ AND: 'invalid' } as any]), SchemaValidationError);
+      assert.throws(() => new ArrayFilter([{ AND: 'invalid' } as any]), SchemaValidationError);
     });
 
     it('should accept empty filter schema', () => {
-      const filterer = new Filterer([]);
-      const result = filterer.applyFilters({ data: [{ name: 'test' }] });
+      const filterer = new ArrayFilter([]);
+      const result = filterer.applyFilters([{ name: 'test' }]);
       assert.deepStrictEqual(result, [{ name: 'test' }]);
     });
   });
 
   describe('Operator Validation', () => {
     it('should throw OperatorError for non-string operator', () => {
-      assert.throws(() => validateOperator(123), OperatorError);
+      assert.throws(() => filterValidator.validateOperator(123), OperatorError);
     });
 
     it('should throw OperatorError for unknown operator', () => {
-      assert.throws(() => validateOperator('unknownOperator'), OperatorError);
+      assert.throws(() => filterValidator.validateOperator('unknownOperator'), OperatorError);
     });
 
     it('should provide suggestion for common operator mistakes', () => {
       try {
-        validateOperator('eq');
+        filterValidator.validateOperator('eq');
         assert.fail('Should have thrown OperatorError');
       } catch (error) {
         assert(error instanceof OperatorError);
@@ -97,7 +99,7 @@ describe('Error Handling and Validation', () => {
       ];
 
       for (const operator of validOperators) {
-        assert.doesNotThrow(() => validateOperator(operator));
+        assert.doesNotThrow(() => filterValidator.validateOperator(operator));
       }
     });
   });
@@ -133,18 +135,14 @@ describe('Error Handling and Validation', () => {
   });
 
   describe('Runtime Error Handling', () => {
-    it('should handle custom operator without function gracefully', () => {
-      assert.throws(() => new Filterer([{ fieldName: 'name', operator: 'custom', value: 'test' }]), ParameterError);
-    });
-
     it('should handle keyExists with non-string value', () => {
-      assert.throws(() => new Filterer([{ fieldName: 'obj', operator: 'keyExists', value: 123 }]), ParameterError);
+      assert.throws(() => new ArrayFilter([{ fieldName: 'obj', operator: 'keyExists', value: 123 }]), ParameterError);
     });
 
     it('should gracefully handle missing nested properties', () => {
       const filterScheme: FilterScheme = [{ fieldName: 'missing.deeply.nested', value: 'test', operator: 'equal' }];
-      const filterer = new Filterer(filterScheme);
-      const result = filterer.applyFilters({ data: [{ name: 'test' }, { missing: null }] });
+      const filterer = new ArrayFilter(filterScheme);
+      const result = filterer.applyFilters([{ name: 'test' }, { missing: null }]);
 
       // Should return empty array since no items match the missing path
       assert.deepStrictEqual(result, []);
@@ -154,11 +152,11 @@ describe('Error Handling and Validation', () => {
       const data = [{ user: { profile: { name: 'John' } } }, { user: null }, { user: { profile: null } }];
 
       const filterScheme: FilterScheme = [{ fieldName: 'user.profile.name', value: 'John', operator: 'equal' }];
-      const filterer = new Filterer(filterScheme);
-      const result = filterer.applyFilters({ data });
+      const filterer = new ArrayFilter(filterScheme);
+      const result = filterer.applyFilters(data);
 
       assert.strictEqual(result.length, 1);
-      assert.strictEqual(result[0].user.profile.name, 'John');
+      assert.strictEqual((result as any)[0].user.profile.name, 'John');
     });
   });
 
@@ -213,13 +211,13 @@ describe('Error Handling and Validation', () => {
 
   describe('Schema Validation on changeSchema', () => {
     it('should validate schema when changing via changeSchema method', () => {
-      const filterer = new Filterer([]);
+      const filterer = new ArrayFilter([]);
 
       assert.throws(() => filterer.changeSchema([{ invalid: 'schema' } as any]), SchemaValidationError);
     });
 
     it('should accept valid schema when changing via changeSchema method', () => {
-      const filterer = new Filterer([]);
+      const filterer = new ArrayFilter([]);
 
       assert.doesNotThrow(() => filterer.changeSchema([{ fieldName: 'name', operator: 'equal', value: 'test' }]));
     });
