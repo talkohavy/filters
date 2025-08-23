@@ -1,6 +1,6 @@
 {
   "name": "@talkohavy/filters",
-  "version": "1.0.34",
+  "version": "2.0.0",
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
   "license": "MIT",
