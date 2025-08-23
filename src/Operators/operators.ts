@@ -1,6 +1,6 @@
 import type { ItemBasedOperatorProps, KeyExistsProps, ValueBasedOperatorProps } from './types';
 
-export class Operators {
+class Operators {
   // ----------------------
   // Value-based Operators:
   // ----------------------
@@ -125,3 +125,10 @@ export class Operators {
 
 export const operators = new Operators();
 export type OperatorNames = keyof Operators;
+
+/**
+ * List of all valid comparison operators
+ */
+export const VALID_OPERATORS = Object.getOwnPropertyNames(Operators.prototype).filter(
+  (key) => key !== 'constructor',
+) as OperatorNames[];

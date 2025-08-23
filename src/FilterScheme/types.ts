@@ -1,4 +1,4 @@
-import type { OperatorNames } from '../Operators/operators';
+import type { OperatorNames } from '../Operators';
 
 /**
  * Individual filter condition that compares a field value using an operator
