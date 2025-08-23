@@ -1,6 +1,8 @@
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 
+// add rollup type
+/** @type {import('rollup').RollupOptions} */
 export default {
   input: 'src/index.ts',
   output: [
