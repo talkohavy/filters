@@ -82,4 +82,4 @@ type ParentFilter = Array<ChildFilter | AndOperator | OrOperator>;
  * ];
  * ```
  */
-export type FilterScheme = Array<ParentFilter | ChildFilter>;
+export type FilterScheme = ParentFilter | ChildFilter;

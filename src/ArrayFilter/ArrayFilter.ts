@@ -77,7 +77,9 @@ export class ArrayFilter {
   }
 
   private buildPredicateFromFilterScheme(props: BuildPredicateFromFilterSchemeProps) {
-    const { filterScheme, relationOperator = RelationOperators.AND } = props;
+    const { filterScheme: filterSchemeRaw, relationOperator = RelationOperators.AND } = props;
+
+    const filterScheme = Array.isArray(filterSchemeRaw) ? filterSchemeRaw : [filterSchemeRaw];
 
     // Step 1: create a booleanFunc for each node at the current tree level
     const filterFunctions: Array<any> = filterScheme.map((filter) => {
