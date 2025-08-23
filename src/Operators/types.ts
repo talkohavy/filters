@@ -17,11 +17,11 @@ export type ValueBasedOperatorProps = ItemBasedOperatorProps & {
 /**
  * Props for checking if a key exists in an object
  */
-export type KeyExistsProps<T = any> = {
+export type KeyExistsProps = {
   /** The property key to check for */
   key: string;
   /** The object to check in */
-  item: T;
+  item: any;
 };
 
 export type OperatorMethodProps = ValueBasedOperatorProps | ItemBasedOperatorProps | KeyExistsProps;
