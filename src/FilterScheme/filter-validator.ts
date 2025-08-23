@@ -1,4 +1,5 @@
 import { OperatorError, ParameterError, SchemaValidationError } from '../common/errors';
+import { RelationOperators } from '../constants';
 import type { OperatorNames } from '../Operators/operators';
 import { OPERATORS_REQUIRING_FUNCTION, VALID_OPERATORS } from './logic/constants';
 import type { FilterScheme } from './types';
@@ -73,7 +74,7 @@ export class FilterValidator {
    * Validates a single filter node (can be a condition or logical operator)
    */
   validateFilterNode(filter: any, path: string): void {
-    if (!filter || typeof filter !== 'object') {
+    if (!this.getIsObject(filter)) {
       throw new SchemaValidationError('Filter node must be an object', {
         path,
         received: typeof filter,
@@ -81,8 +82,8 @@ export class FilterValidator {
       });
     }
 
-    const hasAND = 'AND' in filter;
-    const hasOR = 'OR' in filter;
+    const hasAND = RelationOperators.AND in filter;
+    const hasOR = RelationOperators.OR in filter;
     const hasFieldName = 'fieldName' in filter;
     const hasOperator = 'operator' in filter;
 
@@ -92,7 +93,7 @@ export class FilterValidator {
         throw new SchemaValidationError('Filter node cannot have both AND and OR operators', { path, filter });
       }
 
-      const logicalOperator = hasAND ? 'AND' : 'OR';
+      const logicalOperator = hasAND ? RelationOperators.AND : RelationOperators.OR;
       const nestedFilters = filter[logicalOperator];
 
       if (!Array.isArray(nestedFilters)) {
@@ -148,17 +149,23 @@ export class FilterValidator {
    * Validates a filter schema for structural correctness
    */
   validateFilterSchema(filterScheme: FilterScheme): void {
-    if (!Array.isArray(filterScheme)) {
-      throw new SchemaValidationError('Filter schema must be an array', {
-        received: typeof filterScheme,
-        value: filterScheme,
+    if (Array.isArray(filterScheme)) {
+      if (filterScheme.length === 0) return; // Empty schema is valid
+
+      filterScheme.forEach((filter, i) => {
+        this.validateFilterNode(filter, `filterScheme[${i}]`);
       });
+      return;
     }
 
-    if (filterScheme.length === 0) return; // <--- Empty schema is valid - it means no filtering
+    if (this.getIsObject(filterScheme)) {
+      this.validateFilterNode(filterScheme, 'filterScheme');
+      return;
+    }
 
-    filterScheme.forEach((filter, i) => {
-      this.validateFilterNode(filter, `filterScheme[${i}]`);
+    throw new SchemaValidationError('Filter schema must be either an array or an object', {
+      received: typeof filterScheme,
+      value: filterScheme,
     });
   }
 
@@ -217,6 +224,12 @@ export class FilterValidator {
           `This might cause unexpected behavior. Path: ${path}`,
       );
     }
+  }
+
+  private getIsObject(value: any) {
+    if (typeof value === 'object' && value !== null) return true;
+
+    return false;
   }
 }
 
