@@ -1,16 +1,12 @@
 # @talkohavy/filters
 
-Easy & intuitive way to apply complex filters.
+Easy & intuitive way to apply complex array filters.
 
 [![NPM Version][npm-version-image]][npm-url]
 
 ## Features
 
-This package exposes the class object of `Filter`.  
-`Filter` holds 2 powerful methods for you to utilize:
-
-- `applyFilters`
-- `changeSchema`
+This package exposes the `ArrayFilter` class for flexible, type-safe array filtering, as well as supporting types and constants for building filter schemes.
 
 ## Installation
 
@@ -36,8 +32,8 @@ yarn add @talkohavy/filters
 
 Here's a code example of how to use the package:
 
-```js
-import { Filterer } from '@talkohavy/filters';
+```ts
+import { ArrayFilter, FilterScheme, RelationOperators } from '@talkohavy/filters';
 
 const dummyData = [
   {
@@ -71,43 +67,59 @@ const dummyData = [
   },
 ];
 
-/** @type {Filter} */
-const filterScheme = [
+const filterScheme: FilterScheme = [
   { fieldName: 'name', value: 'Dan', operator: 'startsWith' },
   { fieldName: 'total', value: 13.8, operator: 'gte' },
 ];
 
-const filterer = new Filterer({ filterScheme });
-const filteredData = filterer.applyFilters({ data: dummyData });
 
+const arrayFilter = new ArrayFilter(filterScheme);
+const filteredData = arrayFilter.applyFilters(dummyData);
 console.log(filteredData);
 
-// --- New Operator Examples ---
+// --- Operator Examples ---
 
-// notEqual
-const notEqualScheme = [
+const notEqualScheme: FilterScheme = [
   { fieldName: 'type', value: 'customer', operator: 'notEqual' },
 ];
-console.log(new Filterer(notEqualScheme).applyFilters({ data: dummyData }));
+console.log(new ArrayFilter(notEqualScheme).applyFilters(dummyData));
 
-// between
-const betweenScheme = [
+
+const betweenScheme: FilterScheme = [
   { fieldName: 'total', value: [10, 50], operator: 'between' },
 ];
-console.log(new Filterer(betweenScheme).applyFilters({ data: dummyData }));
+console.log(new ArrayFilter(betweenScheme).applyFilters(dummyData));
 
-// in
-const inScheme = [
+
+const inScheme: FilterScheme = [
   { fieldName: 'type', value: ['customer', 'worker'], operator: 'in' },
 ];
-console.log(new Filterer(inScheme).applyFilters({ data: dummyData }));
+console.log(new ArrayFilter(inScheme).applyFilters(dummyData));
 
-// regex
-const regexScheme = [
+
+const regexScheme: FilterScheme = [
   { fieldName: 'name', value: '^Tr', operator: 'regex' },
 ];
-console.log(new Filterer(regexScheme).applyFilters({ data: dummyData }));
+console.log(new ArrayFilter(regexScheme).applyFilters(dummyData));
 ```
+
+## API
+
+### Main Export
+
+- `ArrayFilter`: The main function for filtering arrays using filter schemes. Call as `new ArrayFilter(filterScheme)`.
+
+### Types
+
+- `FilterScheme`, `ChildFilter`, `CustomPredicateFilterChild`, `ExistsFilterChild`, `OperatorFilterChild`: Types for building filter schemes.
+- `OperatorNames`: All supported operator names.
+- `RelationOperatorsValues`: All supported relation operator values.
+
+### Constants
+
+- `RelationOperators`: Object containing all supported relation operators.
+
+---
 
 ## License
 
