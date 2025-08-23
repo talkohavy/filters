@@ -1,14 +1,14 @@
 import assert from 'assert/strict';
-import { Filterer } from '../src/index';
+import { ArrayFilter } from '../src/index';
 import { data } from './mocks/constants';
-import type { FilterScheme } from '../src/types';
+import type { FilterScheme } from '../src/FilterScheme/types';
 
-describe('Filterer Class', () => {
+describe('ArrayFilter Class', () => {
   it('Simple single filter should pass', () => {
     const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
 
-    const filterer = new Filterer(filterScheme);
-    const actual = filterer.applyFilters({ data });
+    const filterer = new ArrayFilter(filterScheme);
+    const actual = filterer.applyFilters(data);
     const expectedResult = [
       {
         id: 2,
@@ -31,8 +31,8 @@ describe('Filterer Class', () => {
       { fieldName: 'total', value: 13.8, operator: 'gte' },
     ];
 
-    const filterer = new Filterer(filterScheme);
-    const actual = filterer.applyFilters({ data });
+    const filterer = new ArrayFilter(filterScheme);
+    const actual = filterer.applyFilters(data);
 
     const expected = [
       {
@@ -60,8 +60,8 @@ describe('Filterer Class', () => {
       },
     ];
 
-    const filterer = new Filterer(filterScheme);
-    const actual = filterer.applyFilters({ data });
+    const filterer = new ArrayFilter(filterScheme);
+    const actual = filterer.applyFilters(data);
 
     const expected = [
       {
@@ -90,7 +90,7 @@ describe('Filterer Class', () => {
                 AND: [
                   { fieldName: 'name', operator: 'startsWith', value: 'Tr' },
                   { fieldName: 'id', operator: 'equal', value: 2 },
-                  { fieldName: 'orders', operator: 'exists', key: 'isVIP' },
+                  { fieldName: 'orders.isVIP', operator: 'exists' },
                 ],
               },
             ],
@@ -99,8 +99,8 @@ describe('Filterer Class', () => {
       },
     ];
 
-    const filterer = new Filterer(filterScheme);
-    const actual = filterer.applyFilters({ data });
+    const filterer = new ArrayFilter(filterScheme);
+    const actual = filterer.applyFilters(data);
 
     const expected = [
       {
@@ -121,8 +121,8 @@ describe('Filterer Class', () => {
   it('Changing schema should pass', () => {
     const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
 
-    const filterer = new Filterer(filterScheme);
-    const actual = filterer.applyFilters({ data });
+    const filterer = new ArrayFilter(filterScheme);
+    const actual = filterer.applyFilters(data);
 
     const expected = [
       {
@@ -158,7 +158,7 @@ describe('Filterer Class', () => {
     ];
 
     filterer.changeSchema(filterScheme2);
-    const actual2 = filterer.applyFilters({ data });
+    const actual2 = filterer.applyFilters(data);
 
     assert.deepStrictEqual(actual2, expected2);
   });
@@ -167,8 +167,8 @@ describe('Filterer Class', () => {
     describe('Equality Operators', () => {
       it('should filter using "equal" operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'id', value: 1, operator: 'equal' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].id, 1);
@@ -176,8 +176,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "equals" operator (alias)', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'type', value: 'worker', operator: 'equals' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].name, 'Gina Doe');
@@ -185,8 +185,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "softEqual" operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'id', value: '1', operator: 'softEqual' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].id, 1);
@@ -196,8 +196,8 @@ describe('Filterer Class', () => {
     describe('Numeric Operators', () => {
       it('should filter using "gt" (greater than) operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'total', value: 20, operator: 'gt' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 2);
         assert(actual.every((item) => item.total > 20));
@@ -205,8 +205,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "gte" (greater than or equal) operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'total', value: 30.1, operator: 'gte' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 2);
         assert(actual.every((item) => item.total >= 30.1));
@@ -214,8 +214,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "lt" (less than) operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'total', value: 50, operator: 'lt' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 2);
         assert(actual.every((item) => item.total < 50));
@@ -223,8 +223,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "lte" (less than or equal) operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'tax', value: 75.6, operator: 'lte' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 2);
         assert(actual.every((item) => item.tax <= 75.6));
@@ -234,8 +234,8 @@ describe('Filterer Class', () => {
     describe('String Operators', () => {
       it('should filter using "startsWith" operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'Dan', operator: 'startsWith' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].name, 'Dander Mente');
@@ -243,8 +243,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "endsWith" operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'Doe', operator: 'endsWith' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].name, 'Gina Doe');
@@ -252,8 +252,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "includes" operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'address', value: 'USA', operator: 'includes' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 3);
         assert(actual.every((item) => item.address.includes('USA')));
@@ -261,8 +261,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "includesCaseInsensitive" operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'BILL', operator: 'includesCaseInsensitive' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].name, 'Tracey Bill');
@@ -273,8 +273,8 @@ describe('Filterer Class', () => {
       it('should filter using "isEmptyString" operator', () => {
         const testData = [...data, { id: 4, name: '', type: 'test', address: 'Test', tax: 0, total: 0 }];
         const filterScheme: FilterScheme = [{ fieldName: 'name', value: '', operator: 'isEmptyString' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data: testData });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(testData);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].name, '');
@@ -282,8 +282,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "isNull" operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'orders.isVIP', value: null, operator: 'isNull' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].name, 'Tracey Bill');
@@ -291,8 +291,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "isNullish" operator for null values', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'orders.isVIP', value: null, operator: 'isNullish' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         // isNullish should find both null and undefined values
         // Item 2 (Tracey Bill) has orders.isVIP: null
@@ -305,8 +305,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "isNullish" operator for undefined values', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'orders', value: undefined, operator: 'isNullish' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].name, 'Gina Doe');
@@ -314,8 +314,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "isTruthy" operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'orders.amount', value: true, operator: 'isTruthy' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 2);
         assert(actual.every((item) => item.orders?.amount));
@@ -323,8 +323,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "exists" operator (alias for isTruthy)', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'orders', value: true, operator: 'exists' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 2);
         assert(actual.every((item) => item.orders));
@@ -333,8 +333,8 @@ describe('Filterer Class', () => {
       it('should filter using "isFalsy" operator', () => {
         const testData = [...data, { id: 4, name: 'Test', type: 'test', address: '', tax: 0, total: 0 }];
         const filterScheme: FilterScheme = [{ fieldName: 'address', value: false, operator: 'isFalsy' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data: testData });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(testData);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].address, '');
@@ -347,12 +347,11 @@ describe('Filterer Class', () => {
           {
             fieldName: 'name',
             value: 'test',
-            operator: 'custom',
             fn: (itemValue: any, _value: any) => typeof itemValue === 'string' && itemValue.length > 8,
           },
         ];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 2);
         assert(actual.every((item) => item.name.length > 8));
@@ -360,8 +359,8 @@ describe('Filterer Class', () => {
 
       it('should filter using "keyExists" operator', () => {
         const filterScheme: FilterScheme = [{ fieldName: 'orders', value: 'amount', operator: 'keyExists' }];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 2);
         assert(actual.every((item) => 'amount' in (item.orders || {})));
@@ -378,8 +377,8 @@ describe('Filterer Class', () => {
             NOT: true,
           },
         ];
-        const filterer = new Filterer(filterScheme);
-        const actual = filterer.applyFilters({ data });
+        const filterer = new ArrayFilter(filterScheme);
+        const actual = filterer.applyFilters(data);
 
         assert.strictEqual(actual.length, 1);
         assert.strictEqual(actual[0].type, 'worker');
@@ -390,8 +389,8 @@ describe('Filterer Class', () => {
   describe('Nested Field Path Tests', () => {
     it('should filter on nested object properties', () => {
       const filterScheme: FilterScheme = [{ fieldName: 'orders.amount', value: 10, operator: 'equal' }];
-      const filterer = new Filterer(filterScheme);
-      const actual = filterer.applyFilters({ data });
+      const filterer = new ArrayFilter(filterScheme);
+      const actual = filterer.applyFilters(data);
 
       assert.strictEqual(actual.length, 2);
       assert(actual.every((item) => item.orders?.amount === 10));
@@ -407,8 +406,8 @@ describe('Filterer Class', () => {
       const filterScheme: FilterScheme = [
         { fieldName: 'user.profile.settings.theme', value: 'dark', operator: 'equal' },
       ];
-      const filterer = new Filterer(filterScheme);
-      const actual = filterer.applyFilters({ data: testData });
+      const filterer = new ArrayFilter(filterScheme);
+      const actual = filterer.applyFilters(testData);
 
       assert.strictEqual(actual.length, 2);
       assert(actual.every((item) => item.user.profile.settings.theme === 'dark'));
@@ -416,8 +415,8 @@ describe('Filterer Class', () => {
 
     it('should handle missing nested properties gracefully', () => {
       const filterScheme: FilterScheme = [{ fieldName: 'nonexistent.property', value: 'test', operator: 'equal' }];
-      const filterer = new Filterer(filterScheme);
-      const actual = filterer.applyFilters({ data });
+      const filterer = new ArrayFilter(filterScheme);
+      const actual = filterer.applyFilters(data);
 
       assert.strictEqual(actual.length, 0);
     });
@@ -439,8 +438,8 @@ describe('Filterer Class', () => {
         },
       ];
 
-      const filterer = new Filterer(filterScheme);
-      const actual = filterer.applyFilters({ data });
+      const filterer = new ArrayFilter(filterScheme);
+      const actual = filterer.applyFilters(data);
 
       assert.strictEqual(actual.length, 1);
       assert.strictEqual(actual[0].name, 'Tracey Bill');
@@ -461,8 +460,8 @@ describe('Filterer Class', () => {
         },
       ];
 
-      const filterer = new Filterer(filterScheme);
-      const actual = filterer.applyFilters({ data });
+      const filterer = new ArrayFilter(filterScheme);
+      const actual = filterer.applyFilters(data);
 
       assert.strictEqual(actual.length, 2);
     });
@@ -487,8 +486,8 @@ describe('Filterer Class', () => {
         },
       ];
 
-      const filterer = new Filterer(filterScheme);
-      const actual = filterer.applyFilters({ data });
+      const filterer = new ArrayFilter(filterScheme);
+      const actual = filterer.applyFilters(data);
 
       assert.strictEqual(actual.length, 3);
     });
@@ -497,42 +496,27 @@ describe('Filterer Class', () => {
   describe('Edge Cases and Error Handling', () => {
     it('should handle empty filter scheme', () => {
       const filterScheme: FilterScheme = [];
-      const filterer = new Filterer(filterScheme);
-      const actual = filterer.applyFilters({ data });
+      const filterer = new ArrayFilter(filterScheme);
+      const actual = filterer.applyFilters(data);
 
       assert.deepStrictEqual(actual, data);
     });
 
     it('should handle empty data array', () => {
       const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'test', operator: 'equal' }];
-      const filterer = new Filterer(filterScheme);
-      const actual = filterer.applyFilters({ data: [] });
+      const filterer = new ArrayFilter(filterScheme);
+      const actual = filterer.applyFilters([]);
 
       assert.deepStrictEqual(actual, []);
     });
 
     it('should handle null/undefined filter values appropriately', () => {
       const filterScheme: FilterScheme = [{ fieldName: 'orders.isVIP', value: null, operator: 'equal' }];
-      const filterer = new Filterer(filterScheme);
-      const actual = filterer.applyFilters({ data });
+      const filterer = new ArrayFilter(filterScheme);
+      const actual = filterer.applyFilters(data);
 
       assert.strictEqual(actual.length, 1);
-      assert.strictEqual(actual[0].orders.isVIP, null);
-    });
-
-    it('should handle array data items', () => {
-      const arrayData = [
-        ['Alice', 25, 'Engineer'],
-        ['Bob', 30, 'Designer'],
-        ['Charlie', 35, 'Manager'],
-      ];
-
-      const filterScheme: FilterScheme = [{ fieldName: '1', value: 30, operator: 'gte' }];
-      const filterer = new Filterer(filterScheme);
-      const actual = filterer.applyFilters({ data: arrayData });
-
-      assert.strictEqual(actual.length, 2);
-      assert(actual.every((item) => item[1] >= 30));
+      assert.strictEqual((actual as any)[0].orders.isVIP, null);
     });
   });
 });
