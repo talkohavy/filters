@@ -156,7 +156,7 @@ export class ArrayFilter {
       const { itemValue, lastItem, lastKey } = this.getNestedValue(item, fieldName);
 
       try {
-        const selectedOperator = this.compareOperators[operator];
+        const selectedOperator = this.compareOperators[operator].bind(this.compareOperators);
 
         return selectedOperator({ itemValue, value, item: lastItem, key: lastKey });
       } catch (error) {
