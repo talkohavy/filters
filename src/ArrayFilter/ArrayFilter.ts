@@ -1,5 +1,4 @@
 import { RelationOperators } from '../constants';
-import { memoizeFilter } from './utils/memoize';
 import { OperatorError } from '../common/errors';
 import { operators, type IOperators } from '../Operators';
 import type { BuildPredicateFromFilterSchemeProps } from './ArrayFilter.interface';
@@ -59,7 +58,7 @@ export class ArrayFilter {
     this.compareOperators = operators;
 
     this.filterValidator.validateFilterSchema(filterScheme);
-    this.predicate = memoizeFilter(this.buildPredicateFromFilterScheme({ filterScheme }));
+    this.predicate = this.buildPredicateFromFilterScheme({ filterScheme });
   }
 
   /**
@@ -80,7 +79,7 @@ export class ArrayFilter {
   changeSchema(filterScheme: FilterScheme): void {
     this.filterValidator.validateFilterSchema(filterScheme);
 
-    this.predicate = memoizeFilter(this.buildPredicateFromFilterScheme({ filterScheme }));
+    this.predicate = this.buildPredicateFromFilterScheme({ filterScheme });
   }
 
   private buildPredicateFromFilterScheme(props: BuildPredicateFromFilterSchemeProps) {
