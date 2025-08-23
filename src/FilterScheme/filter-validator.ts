@@ -1,7 +1,7 @@
-import { OperatorError, ParameterError, SchemaValidationError } from '../common/errors';
+import { OperatorError, SchemaValidationError } from '../common/errors';
 import { RelationOperators } from '../constants';
 import type { OperatorNames } from '../Operators/operators';
-import { OPERATORS_REQUIRING_FUNCTION, VALID_OPERATORS } from './logic/constants';
+import { VALID_OPERATORS } from './logic/constants';
 import type { FilterScheme } from './types';
 
 export class FilterValidator {
@@ -52,7 +52,7 @@ export class FilterValidator {
    * Validates a filter condition (leaf node with fieldName, operator, value)
    */
   validateFilterCondition(filter: any, path: string): void {
-    const { fieldName, operator, value, fn } = filter;
+    const { fieldName, operator, value } = filter;
 
     // Validate fieldName
     if (typeof fieldName !== 'string' || fieldName.trim() === '') {
@@ -67,7 +67,7 @@ export class FilterValidator {
     this.validateOperator(operator, `${path}.operator`);
 
     // Validate operator-specific requirements
-    this.validateOperatorRequirements(operator, value, fn, path);
+    this.validateOperatorRequirements(operator, value, path);
   }
 
   /**
@@ -190,33 +190,10 @@ export class FilterValidator {
   /**
    * Validates operator-specific requirements (custom functions, etc.)
    */
-  validateOperatorRequirements(operator: string, value: any, fn: any, path: string): void {
-    // Check if operator requires a custom function
-    if (OPERATORS_REQUIRING_FUNCTION.includes(operator)) {
-      if (typeof fn !== 'function') {
-        throw new ParameterError(`Operator '${operator}' requires a custom function in the 'fn' property`, {
-          path,
-          operator,
-          received: typeof fn,
-          value: fn,
-        });
-      }
-    }
-
-    // For keyExists operator, value should be a string (the key name)
-    if (operator === 'keyExists') {
-      if (typeof value !== 'string' || value.trim() === '') {
-        throw new ParameterError(`Operator 'keyExists' requires a non-empty string value (the property key to check)`, {
-          path,
-          operator,
-          received: typeof value,
-          value,
-        });
-      }
-    }
-
+  validateOperatorRequirements(operator: string, value: any, path: string): void {
     // String operators should ideally work with string values
     const stringOperators = ['startsWith', 'endsWith', 'includes', 'includesCaseInsensitive'];
+
     if (stringOperators.includes(operator) && typeof value !== 'string') {
       // This is a warning, not an error, as the operators might handle non-strings gracefully
       console.warn(
