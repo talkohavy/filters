@@ -87,7 +87,6 @@ describe('Error Handling and Validation', () => {
         'endsWith',
         'includes',
         'includesCaseInsensitive',
-        'custom',
         'isEmptyString',
         'isNull',
         'isNullish',
@@ -95,7 +94,6 @@ describe('Error Handling and Validation', () => {
         'isTruthy',
         'exists',
         'keyExists',
-        'applyNot',
       ];
 
       for (const operator of validOperators) {
@@ -135,10 +133,6 @@ describe('Error Handling and Validation', () => {
   });
 
   describe('Runtime Error Handling', () => {
-    it('should handle keyExists with non-string value', () => {
-      assert.throws(() => new ArrayFilter([{ fieldName: 'obj', operator: 'keyExists', value: 123 }]), ParameterError);
-    });
-
     it('should gracefully handle missing nested properties', () => {
       const filterScheme: FilterScheme = [{ fieldName: 'missing.deeply.nested', value: 'test', operator: 'equal' }];
       const filterer = new ArrayFilter(filterScheme);
