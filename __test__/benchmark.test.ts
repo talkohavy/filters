@@ -1,6 +1,6 @@
-import { Filterer } from '../src/index';
+import type { FilterScheme } from '../src/FilterScheme/types';
+import { ArrayFilter } from '../src/index';
 import { data } from './mocks/constants';
-import type { FilterScheme } from '../src/types';
 
 function generateLargeDataset(size: number) {
   const base = data[0];
@@ -18,12 +18,14 @@ describe('Filterer Performance Benchmarks', () => {
       { fieldName: 'total', value: [10, 90], operator: 'between' },
       { fieldName: 'id', value: 50000, operator: 'gte' },
     ];
-    const filterer = new Filterer(filterScheme);
+    const filterer = new ArrayFilter(filterScheme);
     const iterations = 5;
     const start = performance.now();
+
     for (let i = 0; i < iterations; i++) {
-      filterer.applyFilters({ data: largeData });
+      filterer.applyFilters(largeData);
     }
+
     const end = performance.now();
     const duration = (end - start).toFixed(2);
     // Output timing info in test results
