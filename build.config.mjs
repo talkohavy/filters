@@ -57,8 +57,8 @@ function cleanTargetDirectory(outDirName) {
 }
 
 function build() {
-  console.log(`${COLORS.green}- Step 2:${COLORS.stop} build the output dir`);
-  execSync('tsc -p ./tsconfig.json');
+  console.log(`${COLORS.green}- Step 2:${COLORS.stop} build`);
+  execSync('rollup --config'); // or the full command: rollup --config rollup.config.mjs
 
   console.log('');
 }

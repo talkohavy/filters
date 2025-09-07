@@ -1,1 +1,18 @@
-export { Filterer } from './Filterer';
+// Main
+export { ArrayFilter } from './ArrayFilter';
+
+// Filter Scheme
+export type {
+  FilterScheme,
+  ChildFilter,
+  CustomPredicateFilterChild,
+  ExistsFilterChild,
+  OperatorFilterChild,
+} from './FilterScheme/types';
+
+// Relation Operators
+export { RelationOperators } from './common/constants';
+
+// Re-export types for convenience
+export type { RelationOperatorsValues } from './common/constants';
+export type { OperatorNames } from './Operators/operators';
