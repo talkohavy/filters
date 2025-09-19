@@ -1,5 +1,13 @@
 # @talkohavy/filters
 
+## 2.0.1
+
+### Patch Changes
+
+- Renamed RecursiveFilter to just Filter.
+- Filters now support NOT.
+- Now exporting the type Filter, which is more specific than FilterScheme. Useful for when wanting to define the type of an item inside a FilterScheme array.
+
 ## 2.0.0
 
 ### Major Changes
