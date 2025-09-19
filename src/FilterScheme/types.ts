@@ -47,17 +47,22 @@ export type ChildFilter = ExistsFilterChild | OperatorFilterChild | CustomPredic
 /**
  * Logical operator for combining filter conditions with AND logic
  */
-type AndFilter = { AND: Array<RecursiveFilter>; OR?: never; fieldName?: never };
+type AndFilter = { AND: Array<RecursiveFilter>; OR?: never; NOT?: never; fieldName?: never };
 
 /**
  * Logical operator for combining filter conditions with OR logic
  */
-type OrFilter = { OR: Array<RecursiveFilter>; AND?: never; fieldName?: never };
+type OrFilter = { OR: Array<RecursiveFilter>; AND?: never; NOT?: never; fieldName?: never };
+
+/**
+ * Logical operator for negating filter conditions (items in array are combined with AND logic)
+ */
+type NotFilter = { NOT: Array<RecursiveFilter>; AND?: never; OR?: never; fieldName?: never };
 
 /**
  * Parent filter node that can contain multiple child conditions or operators
  */
-type RecursiveFilter = ChildFilter | AndFilter | OrFilter;
+type RecursiveFilter = ChildFilter | AndFilter | OrFilter | NotFilter;
 
 /**
  * Main filter schema type - an array of filter conditions and logical groupings
@@ -77,6 +82,11 @@ type RecursiveFilter = ChildFilter | AndFilter | OrFilter;
  *     OR: [
  *       { fieldName: 'status', value: 'active', operator: 'equal' },
  *       { fieldName: 'priority', value: 'high', operator: 'equal' }
+ *     ]
+ *   },
+ *   {
+ *     NOT: [
+ *       { fieldName: 'category', value: 'archived', operator: 'equal' }
  *     ]
  *   }
  * ];
