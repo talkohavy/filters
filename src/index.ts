@@ -4,6 +4,7 @@ export { ArrayFilter } from './ArrayFilter';
 // Filter Scheme
 export type {
   FilterScheme,
+  Filter,
   ChildFilter,
   CustomPredicateFilterChild,
   ExistsFilterChild,
