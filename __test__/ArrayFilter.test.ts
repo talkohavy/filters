@@ -476,6 +476,31 @@ describe('ArrayFilter Class', () => {
 
       assert.strictEqual(actual.length, 3);
     });
+
+    it('should handle NOT operator', () => {
+      const filterScheme: FilterScheme = [
+        {
+          NOT: [{ fieldName: 'type', value: 'customer', operator: 'equal' }],
+        },
+      ];
+
+      const filterer = new ArrayFilter(filterScheme);
+
+      const actualResult = filterer.applyFilters(data);
+      const expectedResult = [
+        {
+          id: 3,
+          name: 'Gina Doe',
+          type: 'worker',
+          address: 'CA USA',
+          order: 'B3KL',
+          tax: 75.6,
+          total: 30.1,
+        },
+      ];
+
+      assert.deepEqual(actualResult, expectedResult);
+    });
   });
 
   describe('Edge Cases and Error Handling', () => {
