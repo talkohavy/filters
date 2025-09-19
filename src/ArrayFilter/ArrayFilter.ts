@@ -96,7 +96,17 @@ export class ArrayFilter {
       }
 
       // This node is a relationOperation! 1. Attach a relation operation to it. 2. Keep going down further and get the array of nested filters.
-      const relationOperator = RelationOperators.AND in filter ? RelationOperators.AND : RelationOperators.OR;
+      const hasLogicalAND = RelationOperators.AND in filter && Array.isArray(filter[RelationOperators.AND]);
+      const hasLogicalOR = RelationOperators.OR in filter && Array.isArray(filter[RelationOperators.OR]);
+      const hasLogicalNOT = RelationOperators.NOT in filter && Array.isArray(filter[RelationOperators.NOT]);
+
+      const relationOperator = hasLogicalAND
+        ? RelationOperators.AND
+        : hasLogicalOR
+          ? RelationOperators.OR
+          : hasLogicalNOT
+            ? RelationOperators.NOT
+            : RelationOperators.AND; // fallback, though this shouldn't happen
       return this.buildPredicateFromFilterScheme({
         filterScheme: (filter as any)[relationOperator],
         relationOperator,
@@ -106,6 +116,11 @@ export class ArrayFilter {
     // Step 2: apply the relation operator on all nodes on this floor level
     if (relationOperator === RelationOperators.OR) {
       return (item: any) => filterFunctions.some((filter) => filter(item));
+    }
+
+    if (relationOperator === RelationOperators.NOT) {
+      // NOT operator: negate the result of all filters combined with AND logic
+      return (item: any) => !filterFunctions.every((filter) => filter(item));
     }
 
     return (item: any) => filterFunctions.every((filter) => filter(item));
@@ -120,7 +135,12 @@ export class ArrayFilter {
   }
 
   private getIsLeafNode(filter: any): boolean {
-    return !(RelationOperators.AND in filter) && !(RelationOperators.OR in filter);
+    // Check if this is a logical operator (contains array)
+    const hasLogicalAND = RelationOperators.AND in filter && Array.isArray(filter[RelationOperators.AND]);
+    const hasLogicalOR = RelationOperators.OR in filter && Array.isArray(filter[RelationOperators.OR]);
+    const hasLogicalNOT = RelationOperators.NOT in filter && Array.isArray(filter[RelationOperators.NOT]);
+
+    return !hasLogicalAND && !hasLogicalOR && !hasLogicalNOT;
   }
 
   private getCustomPredicateBooleanFunction(filter: CustomPredicateFilterChild) {

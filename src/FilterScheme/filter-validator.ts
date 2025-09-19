@@ -83,16 +83,26 @@ export class FilterValidator {
 
     const hasAND = RelationOperators.AND in filter;
     const hasOR = RelationOperators.OR in filter;
+    const hasLogicalNOT = RelationOperators.NOT in filter && Array.isArray(filter[RelationOperators.NOT]);
     const hasFieldName = 'fieldName' in filter;
     const hasOperator = 'operator' in filter;
 
     // Check for logical operators
-    if (hasAND || hasOR) {
-      if (hasAND && hasOR) {
-        throw new SchemaValidationError('Filter node cannot have both AND and OR operators', { path, filter });
+    if (hasAND || hasOR || hasLogicalNOT) {
+      const operatorCount = [hasAND, hasOR, hasLogicalNOT].filter(Boolean).length;
+      if (operatorCount > 1) {
+        const operators = [
+          hasAND && RelationOperators.AND,
+          hasOR && RelationOperators.OR,
+          hasLogicalNOT && RelationOperators.NOT,
+        ].filter(Boolean);
+        throw new SchemaValidationError(`Filter node cannot have multiple logical operators: ${operators.join(', ')}`, {
+          path,
+          filter,
+        });
       }
 
-      const logicalOperator = hasAND ? RelationOperators.AND : RelationOperators.OR;
+      const logicalOperator = hasAND ? RelationOperators.AND : hasOR ? RelationOperators.OR : RelationOperators.NOT;
       const nestedFilters = filter[logicalOperator];
 
       if (!Array.isArray(nestedFilters)) {

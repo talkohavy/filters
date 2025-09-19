@@ -1,6 +1,7 @@
 export const RelationOperators = {
   AND: 'AND',
   OR: 'OR',
+  NOT: 'NOT',
 } as const;
 
 type RelationOperatorsType = typeof RelationOperators;
