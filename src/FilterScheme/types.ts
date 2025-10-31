@@ -47,17 +47,17 @@ export type ChildFilter = ExistsFilterChild | OperatorFilterChild | CustomPredic
 /**
  * Logical operator for combining filter conditions with AND logic
  */
-type AndFilter = { AND: Array<Filter>; OR?: never; NOT?: never; fieldName?: never };
+export type AndFilter = { AND: Array<Filter>; OR?: never; NOT?: never; fieldName?: never };
 
 /**
  * Logical operator for combining filter conditions with OR logic
  */
-type OrFilter = { OR: Array<Filter>; AND?: never; NOT?: never; fieldName?: never };
+export type OrFilter = { OR: Array<Filter>; AND?: never; NOT?: never; fieldName?: never };
 
 /**
  * Logical operator for negating filter conditions (items in array are combined with AND logic)
  */
-type NotFilter = { NOT: Array<Filter>; AND?: never; OR?: never; fieldName?: never };
+export type NotFilter = { NOT: Array<Filter>; AND?: never; OR?: never; fieldName?: never };
 
 /**
  * Parent filter node that can contain multiple child conditions or operators

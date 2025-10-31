@@ -9,6 +9,9 @@ export type {
   CustomPredicateFilterChild,
   ExistsFilterChild,
   OperatorFilterChild,
+  NotFilter,
+  AndFilter,
+  OrFilter,
 } from './FilterScheme/types';
 
 // Relation Operators
