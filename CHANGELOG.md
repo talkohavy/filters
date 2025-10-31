@@ -1,5 +1,11 @@
 # @talkohavy/filters
 
+## 2.0.2
+
+### Patch Changes
+
+- Export 3 more types: NotFilter, AndFilter, & OrFilter.
+
 ## 2.0.1
 
 ### Patch Changes
