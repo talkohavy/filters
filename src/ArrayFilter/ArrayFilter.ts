@@ -6,7 +6,7 @@ import type {
   OperatorFilterChild,
 } from '../FilterScheme/types';
 import type { BuildPredicateFromFilterSchemeProps } from './ArrayFilter.interface';
-import { LogicalOperators } from '../common/constants';
+import { LogicalOperators, type LogicalOperatorsValues } from '../common/constants';
 import { OperatorError } from '../common/errors';
 import { isGroupFilter, isLeafFilter } from '../common/utils';
 import { filterValidator, type FilterValidator } from '../FilterScheme/filter-validator';
@@ -101,13 +101,17 @@ export class ArrayFilter {
          * 1. Attach a relation operation to it.
          * 2. Keep going further down and get the array of nested filters.
          */
-        const relationOperator = Object.values(filter)[0];
+        const relationOperator = Object.keys(filter)[0] as LogicalOperatorsValues;
 
         return this.buildPredicateFromFilterScheme({
           filterScheme: (filter as any)[relationOperator],
           relationOperator,
         });
       }
+
+      // Fallback: return a function that always returns true for unrecognized filters
+      console.warn('Unrecognized filter structure:', filter);
+      return () => true;
     });
 
     // Step 2: apply the relation operator on all nodes on this floor level
@@ -200,9 +204,8 @@ export class ArrayFilter {
         lastItem = itemValue;
         itemValue = itemValue[subKeyPart];
       }
-    } catch {
-      console.warn('Warning: Failed to extract nested value for field path:', fieldName);
-    }
+      // eslint-disable-next-line no-empty
+    } catch {}
 
     return { itemValue, lastItem, lastKey };
   }

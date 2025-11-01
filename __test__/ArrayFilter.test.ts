@@ -1,11 +1,11 @@
 import assert from 'assert/strict';
 import type { FilterScheme } from '../src/FilterScheme/types';
-import { ArrayFilter } from '../src/index';
+import { ArrayFilter, type OperatorNames } from '../src/index';
 import { data } from './mocks/constants';
 
 describe('ArrayFilter Class', () => {
   it('Simple single filter should pass', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
 
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
@@ -26,7 +26,7 @@ describe('ArrayFilter Class', () => {
   });
 
   it('The implicit AND form filter should pass', () => {
-    const filterScheme: FilterScheme = [
+    const filterScheme: FilterScheme<OperatorNames> = [
       { fieldName: 'name', value: 'Dan', operator: 'startsWith' },
       { fieldName: 'total', value: 13.8, operator: 'gte' },
     ];
@@ -51,7 +51,7 @@ describe('ArrayFilter Class', () => {
   });
 
   it('The explicit AND form filter should pass', () => {
-    const filterScheme: FilterScheme = [
+    const filterScheme: FilterScheme<OperatorNames> = [
       {
         AND: [
           { fieldName: 'total', operator: 'gt', value: 30 },
@@ -79,7 +79,7 @@ describe('ArrayFilter Class', () => {
   });
 
   it('Complex filter with AND & OR', () => {
-    const filterScheme: FilterScheme = [
+    const filterScheme: FilterScheme<OperatorNames> = [
       {
         AND: [
           { fieldName: 'total', operator: 'gt', value: 50 },
@@ -119,7 +119,7 @@ describe('ArrayFilter Class', () => {
   });
 
   it('Changing schema should pass', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'name', value: 'Tr', operator: 'startsWith' }];
 
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
@@ -139,7 +139,7 @@ describe('ArrayFilter Class', () => {
 
     assert.deepStrictEqual(actual, expected);
 
-    const filterScheme2: FilterScheme = [
+    const filterScheme2: FilterScheme<OperatorNames> = [
       { fieldName: 'name', value: 'Dan', operator: 'startsWith' },
       { fieldName: 'total', value: 13.8, operator: 'gte' },
     ];
@@ -166,7 +166,7 @@ describe('ArrayFilter Class', () => {
   describe('Individual Comparison Operators', () => {
     describe('Equality Operators', () => {
       it('should filter using "equal" operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'id', value: 1, operator: 'equal' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'id', value: 1, operator: 'equal' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -175,7 +175,7 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "equals" operator (alias)', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'type', value: 'worker', operator: 'equals' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'type', value: 'worker', operator: 'equals' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -184,7 +184,7 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "softEqual" operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'id', value: '1', operator: 'softEqual' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'id', value: '1', operator: 'softEqual' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -195,7 +195,7 @@ describe('ArrayFilter Class', () => {
 
     describe('Numeric Operators', () => {
       it('should filter using "gt" (greater than) operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'total', value: 20, operator: 'gt' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'total', value: 20, operator: 'gt' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -204,7 +204,7 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "gte" (greater than or equal) operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'total', value: 30.1, operator: 'gte' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'total', value: 30.1, operator: 'gte' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -213,7 +213,7 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "lt" (less than) operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'total', value: 50, operator: 'lt' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'total', value: 50, operator: 'lt' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -222,7 +222,7 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "lte" (less than or equal) operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'tax', value: 75.6, operator: 'lte' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'tax', value: 75.6, operator: 'lte' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -233,7 +233,7 @@ describe('ArrayFilter Class', () => {
 
     describe('String Operators', () => {
       it('should filter using "startsWith" operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'Dan', operator: 'startsWith' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'name', value: 'Dan', operator: 'startsWith' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -242,7 +242,7 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "endsWith" operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'Doe', operator: 'endsWith' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'name', value: 'Doe', operator: 'endsWith' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -251,7 +251,9 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "includes" operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'address', value: 'USA', operator: 'includes' }];
+        const filterScheme: FilterScheme<OperatorNames> = [
+          { fieldName: 'address', value: 'USA', operator: 'includes' },
+        ];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -260,7 +262,9 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "includesCaseInsensitive" operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'BILL', operator: 'includesCaseInsensitive' }];
+        const filterScheme: FilterScheme<OperatorNames> = [
+          { fieldName: 'name', value: 'BILL', operator: 'includesCaseInsensitive' },
+        ];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -272,7 +276,7 @@ describe('ArrayFilter Class', () => {
     describe('Special Value Operators', () => {
       it('should filter using "isEmptyString" operator', () => {
         const testData = [...data, { id: 4, name: '', type: 'test', address: 'Test', tax: 0, total: 0 }];
-        const filterScheme: FilterScheme = [{ fieldName: 'name', value: '', operator: 'isEmptyString' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'name', value: '', operator: 'isEmptyString' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(testData);
 
@@ -281,7 +285,9 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "isNull" operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'orders.isVIP', value: null, operator: 'isNull' }];
+        const filterScheme: FilterScheme<OperatorNames> = [
+          { fieldName: 'orders.isVIP', value: null, operator: 'isNull' },
+        ];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -290,7 +296,9 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "isNullish" operator for null values', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'orders.isVIP', value: null, operator: 'isNullish' }];
+        const filterScheme: FilterScheme<OperatorNames> = [
+          { fieldName: 'orders.isVIP', value: null, operator: 'isNullish' },
+        ];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -304,7 +312,9 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "isNullish" operator for undefined values', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'orders', value: undefined, operator: 'isNullish' }];
+        const filterScheme: FilterScheme<OperatorNames> = [
+          { fieldName: 'orders', value: undefined, operator: 'isNullish' },
+        ];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -313,7 +323,9 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "isTruthy" operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'orders.amount', value: true, operator: 'isTruthy' }];
+        const filterScheme: FilterScheme<OperatorNames> = [
+          { fieldName: 'orders.amount', value: true, operator: 'isTruthy' },
+        ];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -322,7 +334,7 @@ describe('ArrayFilter Class', () => {
       });
 
       it('should filter using "exists" operator (alias for isTruthy)', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'orders', operator: 'exists' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'orders', operator: 'exists' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -332,7 +344,7 @@ describe('ArrayFilter Class', () => {
 
       it('should filter using "isFalsy" operator', () => {
         const testData = [...data, { id: 4, name: 'Test', type: 'test', address: '', tax: 0, total: 0 }];
-        const filterScheme: FilterScheme = [{ fieldName: 'address', value: false, operator: 'isFalsy' }];
+        const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'address', value: false, operator: 'isFalsy' }];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(testData);
 
@@ -343,7 +355,9 @@ describe('ArrayFilter Class', () => {
 
     describe('Complex Operators', () => {
       it('should filter using "keyExists" operator', () => {
-        const filterScheme: FilterScheme = [{ fieldName: 'orders', value: 'amount', operator: 'keyExists' }];
+        const filterScheme: FilterScheme<OperatorNames> = [
+          { fieldName: 'orders', value: 'amount', operator: 'keyExists' },
+        ];
         const filterer = new ArrayFilter(filterScheme);
         const actual = filterer.applyFilters(data);
 
@@ -354,7 +368,7 @@ describe('ArrayFilter Class', () => {
       it('should filter using "applyNot" operator', () => {
         // applyNot is a higher-order function, not used directly in filter schemes
         // Instead, use the NOT property for negation
-        const filterScheme: FilterScheme = [
+        const filterScheme: FilterScheme<OperatorNames> = [
           {
             fieldName: 'type',
             value: 'customer',
@@ -373,7 +387,7 @@ describe('ArrayFilter Class', () => {
 
   describe('Nested Field Path Tests', () => {
     it('should filter on nested object properties', () => {
-      const filterScheme: FilterScheme = [{ fieldName: 'orders.amount', value: 10, operator: 'equal' }];
+      const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'orders.amount', value: 10, operator: 'equal' }];
       const filterer = new ArrayFilter(filterScheme);
       const actual = filterer.applyFilters(data);
 
@@ -388,7 +402,7 @@ describe('ArrayFilter Class', () => {
         { id: 3, user: { profile: { settings: { theme: 'dark' } } } },
       ];
 
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         { fieldName: 'user.profile.settings.theme', value: 'dark', operator: 'equal' },
       ];
       const filterer = new ArrayFilter(filterScheme);
@@ -399,7 +413,9 @@ describe('ArrayFilter Class', () => {
     });
 
     it('should handle missing nested properties gracefully', () => {
-      const filterScheme: FilterScheme = [{ fieldName: 'nonexistent.property', value: 'test', operator: 'equal' }];
+      const filterScheme: FilterScheme<OperatorNames> = [
+        { fieldName: 'nonexistent.property', value: 'test', operator: 'equal' },
+      ];
       const filterer = new ArrayFilter(filterScheme);
       const actual = filterer.applyFilters(data);
 
@@ -409,7 +425,7 @@ describe('ArrayFilter Class', () => {
 
   describe('Complex Logical Combinations', () => {
     it('should handle nested AND groups', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           AND: [
             { fieldName: 'type', value: 'customer', operator: 'equal' },
@@ -431,7 +447,7 @@ describe('ArrayFilter Class', () => {
     });
 
     it('should handle nested OR groups', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           OR: [
             { fieldName: 'name', value: 'Gina', operator: 'startsWith' },
@@ -452,7 +468,7 @@ describe('ArrayFilter Class', () => {
     });
 
     it('should handle mixed AND/OR with multiple levels', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           AND: [
             {
@@ -478,7 +494,7 @@ describe('ArrayFilter Class', () => {
     });
 
     it('should handle NOT operator', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           NOT: [{ fieldName: 'type', value: 'customer', operator: 'equal' }],
         },
@@ -505,7 +521,7 @@ describe('ArrayFilter Class', () => {
 
   describe('Edge Cases and Error Handling', () => {
     it('should handle empty filter scheme', () => {
-      const filterScheme: FilterScheme = [];
+      const filterScheme: FilterScheme<OperatorNames> = [];
       const filterer = new ArrayFilter(filterScheme);
       const actual = filterer.applyFilters(data);
 
@@ -513,7 +529,7 @@ describe('ArrayFilter Class', () => {
     });
 
     it('should handle empty data array', () => {
-      const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'test', operator: 'equal' }];
+      const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'name', value: 'test', operator: 'equal' }];
       const filterer = new ArrayFilter(filterScheme);
       const actual = filterer.applyFilters([]);
 
@@ -521,7 +537,7 @@ describe('ArrayFilter Class', () => {
     });
 
     it('should handle null/undefined filter values appropriately', () => {
-      const filterScheme: FilterScheme = [{ fieldName: 'orders.isVIP', value: null, operator: 'equal' }];
+      const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'orders.isVIP', value: null, operator: 'equal' }];
       const filterer = new ArrayFilter(filterScheme);
       const actual = filterer.applyFilters(data);
 

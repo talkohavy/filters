@@ -1,7 +1,7 @@
 import assert from 'assert/strict';
 import type { FilterScheme } from '../src/FilterScheme/types';
-import { ArrayFilter } from '../src';
-import { validateFieldPath } from '../src/ArrayFilter/utils/validateFieldPath';
+import { ArrayFilter, type OperatorNames } from '../src';
+import { validateFieldPath } from '../src/ArrayFilter/logic/utils/validateFieldPath';
 import {
   FieldPathError,
   FilterError,
@@ -134,7 +134,9 @@ describe('Error Handling and Validation', () => {
 
   describe('Runtime Error Handling', () => {
     it('should gracefully handle missing nested properties', () => {
-      const filterScheme: FilterScheme = [{ fieldName: 'missing.deeply.nested', value: 'test', operator: 'equal' }];
+      const filterScheme: FilterScheme<OperatorNames> = [
+        { fieldName: 'missing.deeply.nested', value: 'test', operator: 'equal' },
+      ];
       const filterer = new ArrayFilter(filterScheme);
       const result = filterer.applyFilters([{ name: 'test' }, { missing: null }]);
 
@@ -145,7 +147,9 @@ describe('Error Handling and Validation', () => {
     it('should handle null values in field path gracefully', () => {
       const data = [{ user: { profile: { name: 'John' } } }, { user: null }, { user: { profile: null } }];
 
-      const filterScheme: FilterScheme = [{ fieldName: 'user.profile.name', value: 'John', operator: 'equal' }];
+      const filterScheme: FilterScheme<OperatorNames> = [
+        { fieldName: 'user.profile.name', value: 'John', operator: 'equal' },
+      ];
       const filterer = new ArrayFilter(filterScheme);
       const result = filterer.applyFilters(data);
 

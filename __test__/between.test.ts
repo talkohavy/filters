@@ -1,11 +1,11 @@
 import assert from 'assert/strict';
 import type { FilterScheme } from '../src/FilterScheme/types';
-import { ArrayFilter } from '../src/index';
+import { ArrayFilter, type OperatorNames } from '../src/index';
 import { data } from './mocks/constants';
 
 describe('between operator', () => {
   it('should filter items where value is between two bounds (inclusive)', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'total', value: [30, 100], operator: 'between' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'total', value: [30, 100], operator: 'between' }];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
     const expected = data.filter((item: any) => item.total >= 30 && item.total <= 100);
@@ -14,7 +14,9 @@ describe('between operator', () => {
   });
 
   it('should return no items if no values are in range', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'total', value: [1000, 2000], operator: 'between' }];
+    const filterScheme: FilterScheme<OperatorNames> = [
+      { fieldName: 'total', value: [1000, 2000], operator: 'between' },
+    ];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
 
@@ -22,7 +24,7 @@ describe('between operator', () => {
   });
 
   it('should handle reversed bounds', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'total', value: [100, 30], operator: 'between' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'total', value: [100, 30], operator: 'between' }];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
 
@@ -31,7 +33,7 @@ describe('between operator', () => {
   });
 
   it('should handle non-array value gracefully', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'total', value: 50, operator: 'between' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'total', value: 50, operator: 'between' }];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
 
