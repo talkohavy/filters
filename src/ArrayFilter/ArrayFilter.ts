@@ -1,16 +1,17 @@
 import type {
-  ChildFilter,
+  LeafFilter,
   CustomPredicateFilterChild,
   ExistsFilterChild,
   FilterScheme,
   OperatorFilterChild,
 } from '../FilterScheme/types';
 import type { BuildPredicateFromFilterSchemeProps } from './ArrayFilter.interface';
-import { RelationOperators } from '../common/constants';
+import { LogicalOperators } from '../common/constants';
 import { OperatorError } from '../common/errors';
+import { isGroupFilter, isLeafFilter } from '../common/utils';
 import { filterValidator, type FilterValidator } from '../FilterScheme/filter-validator';
-import { operators, type IOperators } from '../Operators';
-import { validateFieldPath } from './utils/validateFieldPath';
+import { type OperatorNames, operators } from './logic/utils/Operators';
+import { validateFieldPath } from './logic/utils/validateFieldPath';
 
 /**
  * Filterer class for applying complex filter schemes to data arrays.
@@ -39,7 +40,7 @@ import { validateFieldPath } from './utils/validateFieldPath';
  */
 export class ArrayFilter {
   private predicate: (item: any) => boolean;
-  private readonly compareOperators: IOperators;
+  private readonly compareOperators = operators;
   private readonly filterValidator: FilterValidator;
   /**
    * Extracts a nested value from an object using a dot-separated field path.
@@ -53,9 +54,8 @@ export class ArrayFilter {
    * Creates a new Filterer instance with a filter scheme.
    * @param filterScheme - Array of filter conditions and logical groupings
    */
-  constructor(filterScheme: FilterScheme) {
+  constructor(filterScheme: FilterScheme<OperatorNames>) {
     this.filterValidator = filterValidator;
-    this.compareOperators = operators;
 
     this.filterValidator.validateFilterSchema(filterScheme);
     this.predicate = this.buildPredicateFromFilterScheme({ filterScheme });
@@ -76,49 +76,46 @@ export class ArrayFilter {
    * Changes the filter scheme for this Filterer instance.
    * @param filterScheme - New filter scheme to apply
    */
-  changeSchema(filterScheme: FilterScheme): void {
+  changeSchema(filterScheme: FilterScheme<OperatorNames>): void {
     this.filterValidator.validateFilterSchema(filterScheme);
 
     this.predicate = this.buildPredicateFromFilterScheme({ filterScheme });
   }
 
-  private buildPredicateFromFilterScheme(props: BuildPredicateFromFilterSchemeProps) {
-    const { filterScheme: filterSchemeRaw, relationOperator = RelationOperators.AND } = props;
+  private buildPredicateFromFilterScheme(props: BuildPredicateFromFilterSchemeProps<OperatorNames>) {
+    const { filterScheme: filterSchemeRaw, relationOperator = LogicalOperators.AND } = props;
 
     const filterScheme = Array.isArray(filterSchemeRaw) ? filterSchemeRaw : [filterSchemeRaw];
 
     // Step 1: create a booleanFunc for each node at the current tree level
     const filterFunctions: Array<any> = filterScheme.map((filter) => {
-      if (this.getIsLeafNode(filter)) {
-        const booleanFunc = this.createBooleanFunction(filter as any);
+      if (isLeafFilter<OperatorNames>(filter)) {
+        const booleanFunc = this.createBooleanFunction(filter);
 
         return 'NOT' in filter ? this.applyNot(booleanFunc) : booleanFunc;
       }
 
-      // This node is a relationOperation! 1. Attach a relation operation to it. 2. Keep going down further and get the array of nested filters.
-      const hasLogicalAND = RelationOperators.AND in filter && Array.isArray(filter[RelationOperators.AND]);
-      const hasLogicalOR = RelationOperators.OR in filter && Array.isArray(filter[RelationOperators.OR]);
-      const hasLogicalNOT = RelationOperators.NOT in filter && Array.isArray(filter[RelationOperators.NOT]);
+      if (isGroupFilter<OperatorNames>(filter)) {
+        /**
+         * This node is a relationOperation!
+         * 1. Attach a relation operation to it.
+         * 2. Keep going further down and get the array of nested filters.
+         */
+        const relationOperator = Object.values(filter)[0];
 
-      const relationOperator = hasLogicalAND
-        ? RelationOperators.AND
-        : hasLogicalOR
-          ? RelationOperators.OR
-          : hasLogicalNOT
-            ? RelationOperators.NOT
-            : RelationOperators.AND; // fallback, though this shouldn't happen
-      return this.buildPredicateFromFilterScheme({
-        filterScheme: (filter as any)[relationOperator],
-        relationOperator,
-      });
+        return this.buildPredicateFromFilterScheme({
+          filterScheme: (filter as any)[relationOperator],
+          relationOperator,
+        });
+      }
     });
 
     // Step 2: apply the relation operator on all nodes on this floor level
-    if (relationOperator === RelationOperators.OR) {
+    if (relationOperator === LogicalOperators.OR) {
       return (item: any) => filterFunctions.some((filter) => filter(item));
     }
 
-    if (relationOperator === RelationOperators.NOT) {
+    if (relationOperator === LogicalOperators.NOT) {
       // NOT operator: negate the result of all filters combined with AND logic
       return (item: any) => !filterFunctions.every((filter) => filter(item));
     }
@@ -126,21 +123,12 @@ export class ArrayFilter {
     return (item: any) => filterFunctions.every((filter) => filter(item));
   }
 
-  private createBooleanFunction(filter: ChildFilter) {
+  private createBooleanFunction(filter: LeafFilter<OperatorNames>) {
     if ('fn' in filter) {
       return this.getCustomPredicateBooleanFunction(filter);
     }
 
     return this.getOperatorBooleanFunction(filter);
-  }
-
-  private getIsLeafNode(filter: any): boolean {
-    // Check if this is a logical operator (contains array)
-    const hasLogicalAND = RelationOperators.AND in filter && Array.isArray(filter[RelationOperators.AND]);
-    const hasLogicalOR = RelationOperators.OR in filter && Array.isArray(filter[RelationOperators.OR]);
-    const hasLogicalNOT = RelationOperators.NOT in filter && Array.isArray(filter[RelationOperators.NOT]);
-
-    return !hasLogicalAND && !hasLogicalOR && !hasLogicalNOT;
   }
 
   private getCustomPredicateBooleanFunction(filter: CustomPredicateFilterChild) {
@@ -163,11 +151,13 @@ export class ArrayFilter {
     };
   }
 
-  private getOperatorBooleanFunction<T>(filter: OperatorFilterChild | ExistsFilterChild) {
+  private getOperatorBooleanFunction<Item = any>(
+    filter: OperatorFilterChild<OperatorNames> | ExistsFilterChild<OperatorNames>,
+  ) {
     const { operator, fieldName } = filter;
     const value = 'value' in filter ? filter.value : undefined;
 
-    return (item: T) => {
+    return (item: Item) => {
       const { itemValue, lastItem, lastKey } = this.extractNestedValueFromItem(item, fieldName);
 
       try {
@@ -201,7 +191,7 @@ export class ArrayFilter {
       this.fieldPathCache.set(fieldName, fieldParts);
     }
 
-    const lastKey = fieldParts.at(-1);
+    const lastKey = fieldParts.at(-1)!;
     let itemValue: any = item;
     let lastItem: any = item;
 

@@ -40,27 +40,50 @@ export type CustomPredicateFilterChild = _ValueBasedFilterChild & {
   fn: (itemValue: unknown, filterValue: unknown) => boolean;
 };
 
-export type ChildFilter<T = string> = ExistsFilterChild<T> | OperatorFilterChild<T> | CustomPredicateFilterChild;
+export type LeafFilter<T = string> = ExistsFilterChild<T> | OperatorFilterChild<T> | CustomPredicateFilterChild;
 
 /**
- * Logical operator for combining filter conditions with AND logic
+ * Utility type to exclude all keys from _ValueBasedFilterChild
  */
-export type AndFilter<T = string> = { AND: Array<Filter<T>>; OR?: never; NOT?: never; fieldName?: never };
+type LeafFilterKeys = Omit<OperatorFilterChild, 'NOT'>;
+type OrFilterKeys<T = string> = { OR: Array<Filter<T>> };
+type NotFilterKeys<T = string> = { NOT: Array<Filter<T>> };
+
+type ExcludeLeafFilterKeys<T> = T & {
+  [K in keyof LeafFilterKeys]?: never;
+};
+type ExcludeOrFilterKeys<T> = T & {
+  [K in keyof OrFilterKeys]?: never;
+};
+type ExcludeNotFilterKeys<T> = T & {
+  [K in keyof NotFilterKeys]?: never;
+};
 
 /**
- * Logical operator for combining filter conditions with OR logic
+ * AND excludes OR, NOT & Leaf filter keys
  */
-export type OrFilter<T = string> = { OR: Array<Filter<T>>; AND?: never; NOT?: never; fieldName?: never };
+export type AndFilter<T = string> = ExcludeLeafFilterKeys<
+  ExcludeOrFilterKeys<ExcludeNotFilterKeys<{ AND: Array<Filter<T>> }>>
+>;
 
 /**
- * Logical operator for negating filter conditions (items in array are combined with AND logic)
+ * OR excludes NOT & Leaf filter keys
+ *
+ * AND already excludes it.
  */
-export type NotFilter<T = string> = { NOT: Array<Filter<T>>; AND?: never; OR?: never; fieldName?: never };
+export type OrFilter<T = string> = ExcludeLeafFilterKeys<ExcludeNotFilterKeys<{ OR: Array<Filter<T>> }>>;
+
+/**
+ * NOT excludes Leaf filter keys
+ *
+ * AND & OR already exclude it.
+ */
+export type NotFilter<T = string> = ExcludeLeafFilterKeys<{ NOT: Array<Filter<T>> }>;
 
 /**
  * Parent filter node that can contain multiple child conditions or operators
  */
-export type Filter<T = string> = ChildFilter<T> | AndFilter | OrFilter | NotFilter;
+type Filter<T = string> = LeafFilter<T> | AndFilter | OrFilter | NotFilter;
 
 /**
  * Main filter schema type - an array of filter conditions and logical groupings

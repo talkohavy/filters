@@ -1,3 +1,5 @@
+// main exports
 export { operators, VALID_OPERATORS } from './operators';
-export type { IOperators } from './types';
+
+// types
 export type { OperatorNames } from './operators';

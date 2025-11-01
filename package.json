@@ -4,7 +4,7 @@
   "description": "This package exposes an easy & intuitive filtering mechanism",
   "private": true,
   "license": "MIT",
-  "keywords": ["filter", "talkohavy"],
+  "keywords": ["filters", "talkohavy"],
   "exports": {
     ".": {
       "import": {

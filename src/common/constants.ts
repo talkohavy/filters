@@ -1,9 +1,12 @@
-export const RelationOperators = {
+export const LogicalOperators = {
   AND: 'AND',
   OR: 'OR',
   NOT: 'NOT',
 } as const;
 
-type RelationOperatorsType = typeof RelationOperators;
-type RelationOperatorsKeys = keyof RelationOperatorsType;
-export type RelationOperatorsValues = RelationOperatorsType[RelationOperatorsKeys];
+type LogicalOperatorsType = typeof LogicalOperators;
+type LogicalOperatorKeys = keyof LogicalOperatorsType;
+export type LogicalOperatorsValues = LogicalOperatorsType[LogicalOperatorKeys];
+
+export const FIELD_NAME_KEY = 'fieldName';
+export const OPERATOR_KEY = 'operator';
