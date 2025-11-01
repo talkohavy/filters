@@ -8,7 +8,7 @@ export type {
   // Main leaf/condition filter types
   LeafFilter,
   // Individual leaf/condition filter types
-  ExistsFilterChild,
-  CustomPredicateFilterChild,
-  OperatorFilterChild,
+  ExistsLeafFilter,
+  CustomPredicateLeafFilter,
+  OperatorLeafFilter,
 } from './types';

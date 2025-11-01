@@ -19,7 +19,7 @@ type _ValueBasedFilterChild = _BaseFilterChild & {
 /**
  * Individual filter condition that compares a field value using an operator
  */
-export type ExistsFilterChild<T = string> = _BaseFilterChild & {
+export type ExistsLeafFilter<T = string> = _BaseFilterChild & {
   /** The comparison operator to use */
   operator: T;
 };
@@ -27,7 +27,7 @@ export type ExistsFilterChild<T = string> = _BaseFilterChild & {
 /**
  * Individual filter condition that compares a field value using an operator
  */
-export type OperatorFilterChild<T = string> = _ValueBasedFilterChild & {
+export type OperatorLeafFilter<T = string> = _ValueBasedFilterChild & {
   /** The comparison operator to use */
   operator: T;
 };
@@ -35,17 +35,17 @@ export type OperatorFilterChild<T = string> = _ValueBasedFilterChild & {
 /**
  * Individual filter condition that compares a field value using an operator
  */
-export type CustomPredicateFilterChild = _ValueBasedFilterChild & {
+export type CustomPredicateLeafFilter = _ValueBasedFilterChild & {
   /** Optional custom comparison function for 'custom' operator */
   fn: (itemValue: unknown, filterValue: unknown) => boolean;
 };
 
-export type LeafFilter<T = string> = ExistsFilterChild<T> | OperatorFilterChild<T> | CustomPredicateFilterChild;
+export type LeafFilter<T = string> = ExistsLeafFilter<T> | OperatorLeafFilter<T> | CustomPredicateLeafFilter;
 
 /**
  * Utility type to exclude all keys from _ValueBasedFilterChild
  */
-type LeafFilterKeys = Omit<OperatorFilterChild, 'NOT'>;
+type LeafFilterKeys = Omit<OperatorLeafFilter, 'NOT'>;
 type OrFilterKeys<T = string> = { OR: Array<Filter<T>> };
 type NotFilterKeys<T = string> = { NOT: Array<Filter<T>> };
 

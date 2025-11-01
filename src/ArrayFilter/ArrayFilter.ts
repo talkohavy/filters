@@ -1,9 +1,9 @@
 import type {
   LeafFilter,
-  CustomPredicateFilterChild,
-  ExistsFilterChild,
+  CustomPredicateLeafFilter,
+  ExistsLeafFilter,
   FilterScheme,
-  OperatorFilterChild,
+  OperatorLeafFilter,
 } from '../FilterScheme/types';
 import type { BuildPredicateFromFilterSchemeProps } from './ArrayFilter.interface';
 import { LogicalOperators, type LogicalOperatorsValues } from '../common/constants';
@@ -135,7 +135,7 @@ export class ArrayFilter {
     return this.getOperatorBooleanFunction(filter);
   }
 
-  private getCustomPredicateBooleanFunction(filter: CustomPredicateFilterChild) {
+  private getCustomPredicateBooleanFunction(filter: CustomPredicateLeafFilter) {
     const { fieldName, value } = filter;
 
     return (item: any) => {
@@ -156,7 +156,7 @@ export class ArrayFilter {
   }
 
   private getOperatorBooleanFunction<Item = any>(
-    filter: OperatorFilterChild<OperatorNames> | ExistsFilterChild<OperatorNames>,
+    filter: OperatorLeafFilter<OperatorNames> | ExistsLeafFilter<OperatorNames>,
   ) {
     const { operator, fieldName } = filter;
     const value = 'value' in filter ? filter.value : undefined;
