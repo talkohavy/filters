@@ -1,7 +1,7 @@
 import type { FilterScheme } from './types';
-import { RelationOperators } from '../common/constants';
+import { VALID_OPERATORS, type OperatorNames } from '../ArrayFilter';
 import { OperatorError, SchemaValidationError } from '../common/errors';
-import { VALID_OPERATORS, type OperatorNames } from '../Operators';
+import { isGroupFilter, isLeafFilter } from '../common/utils';
 
 export class FilterValidator {
   /**
@@ -81,29 +81,22 @@ export class FilterValidator {
       });
     }
 
-    const hasAND = RelationOperators.AND in filter;
-    const hasOR = RelationOperators.OR in filter;
-    const hasLogicalNOT = RelationOperators.NOT in filter && Array.isArray(filter[RelationOperators.NOT]);
-    const hasFieldName = 'fieldName' in filter;
-    const hasOperator = 'operator' in filter;
+    const isGroup = isGroupFilter(filter);
+    const isLeaf = isLeafFilter(filter);
 
     // Check for logical operators
-    if (hasAND || hasOR || hasLogicalNOT) {
-      const operatorCount = [hasAND, hasOR, hasLogicalNOT].filter(Boolean).length;
+    if (isGroup) {
+      const operators = Object.keys(filter).filter(Boolean);
+      const operatorCount = operators.length;
       if (operatorCount > 1) {
-        const operators = [
-          hasAND && RelationOperators.AND,
-          hasOR && RelationOperators.OR,
-          hasLogicalNOT && RelationOperators.NOT,
-        ].filter(Boolean);
         throw new SchemaValidationError(`Filter node cannot have multiple logical operators: ${operators.join(', ')}`, {
           path,
           filter,
         });
       }
 
-      const logicalOperator = hasAND ? RelationOperators.AND : hasOR ? RelationOperators.OR : RelationOperators.NOT;
-      const nestedFilters = filter[logicalOperator];
+      const logicalOperator = operators[0]!;
+      const nestedFilters = (filter as any)[logicalOperator];
 
       if (!Array.isArray(nestedFilters)) {
         throw new SchemaValidationError(`${logicalOperator} operator must contain an array of filters`, {
@@ -127,27 +120,11 @@ export class FilterValidator {
     }
 
     // If not a logical operator, it must be a filter condition
-    if (!hasFieldName && !hasOperator) {
+    if (!isLeaf) {
       throw new SchemaValidationError(`Filter condition must have 'fieldName' and 'operator' properties`, {
         path,
         filter,
         missing: ['fieldName', 'operator'],
-      });
-    }
-
-    if (!hasFieldName) {
-      throw new SchemaValidationError(`Filter condition must have 'fieldName' property`, {
-        path,
-        filter,
-        missing: ['fieldName'],
-      });
-    }
-
-    if (!hasOperator) {
-      throw new SchemaValidationError(`Filter condition must have 'operator' property`, {
-        path,
-        filter,
-        missing: ['operator'],
       });
     }
 
@@ -157,7 +134,7 @@ export class FilterValidator {
   /**
    * Validates a filter schema for structural correctness
    */
-  validateFilterSchema(filterScheme: FilterScheme): void {
+  validateFilterSchema<T>(filterScheme: FilterScheme<T>): void {
     if (Array.isArray(filterScheme)) {
       if (filterScheme.length === 0) return; // Empty schema is valid
 

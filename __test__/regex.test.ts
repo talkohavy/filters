@@ -1,11 +1,11 @@
 import assert from 'assert/strict';
 import type { FilterScheme } from '../src/FilterScheme/types';
-import { ArrayFilter } from '../src/index';
+import { ArrayFilter, type OperatorNames } from '../src/index';
 import { data } from './mocks/constants';
 
 describe('regex operator', () => {
   it('should filter items where string matches regex pattern (RegExp)', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'name', value: /^Tr/, operator: 'regex' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'name', value: /^Tr/, operator: 'regex' }];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
     const expected = data.filter((item: any) => /^Tr/.test(item.name));
@@ -13,7 +13,7 @@ describe('regex operator', () => {
   });
 
   it('should filter items where string matches regex pattern (string)', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'name', value: '^Tr', operator: 'regex' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'name', value: '^Tr', operator: 'regex' }];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
     const expected = data.filter((item: any) => /^Tr/.test(item.name));
@@ -21,14 +21,14 @@ describe('regex operator', () => {
   });
 
   it('should return no items if no match', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'name', value: 'ZZZ$', operator: 'regex' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'name', value: 'ZZZ$', operator: 'regex' }];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
     assert.deepStrictEqual(actual, []);
   });
 
   it('should handle non-string itemValue gracefully', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'id', value: '^1', operator: 'regex' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'id', value: '^1', operator: 'regex' }];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
     // Should return no items, as id is not a string

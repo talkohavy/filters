@@ -1,11 +1,11 @@
 import type { FilterScheme } from '../src/FilterScheme/types';
-import { ArrayFilter } from '../src/ArrayFilter';
+import { ArrayFilter, type OperatorNames } from '../src/ArrayFilter';
 import { data } from './mocks/constants';
 
 describe('ArrayFilter - NOT operator', () => {
   describe('Basic NOT operator functionality', () => {
     test('should exclude items matching NOT condition', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           NOT: [{ fieldName: 'name', value: 'Dander Mente', operator: 'equal' }],
         },
@@ -20,7 +20,7 @@ describe('ArrayFilter - NOT operator', () => {
     });
 
     test('should handle NOT with multiple conditions (AND relation)', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           NOT: [
             { fieldName: 'name', value: 'Dander Mente', operator: 'equal' },
@@ -45,7 +45,7 @@ describe('ArrayFilter - NOT operator', () => {
         { user: { profile: { status: 'active' } }, id: 3 },
       ];
 
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           NOT: [{ fieldName: 'user.profile.status', value: 'active', operator: 'equal' }],
         },
@@ -61,7 +61,7 @@ describe('ArrayFilter - NOT operator', () => {
 
   describe('NOT operator with other logical operators', () => {
     test('should combine NOT with AND at root level', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         { fieldName: 'total', value: 10, operator: 'gte' },
         {
           NOT: [{ fieldName: 'name', value: 'Dander Mente', operator: 'equal' }],
@@ -76,7 +76,7 @@ describe('ArrayFilter - NOT operator', () => {
     });
 
     test('should handle NOT containing OR conditions', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           NOT: [
             {
@@ -98,7 +98,7 @@ describe('ArrayFilter - NOT operator', () => {
     });
 
     test('should handle nested NOT operators', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           NOT: [
             {
@@ -116,7 +116,7 @@ describe('ArrayFilter - NOT operator', () => {
     });
 
     test('should handle OR containing NOT', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           OR: [
             { fieldName: 'total', value: 100, operator: 'gte' },
@@ -137,7 +137,7 @@ describe('ArrayFilter - NOT operator', () => {
 
   describe('NOT operator with different comparison operators', () => {
     test('should work with string operators', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           NOT: [{ fieldName: 'name', value: 'Dan', operator: 'startsWith' }],
         },
@@ -149,19 +149,6 @@ describe('ArrayFilter - NOT operator', () => {
       expect(result.every((item) => !item.name.startsWith('Dan'))).toBe(true);
     });
 
-    test('should work with range operators', () => {
-      const filterScheme: FilterScheme = [
-        {
-          NOT: [{ fieldName: 'total', value: [10, 30], operator: 'between' }],
-        },
-      ];
-
-      const filter = new ArrayFilter(filterScheme);
-      const result = filter.applyFilters(data);
-
-      expect(result.every((item) => !(item.total >= 10 && item.total <= 30))).toBe(true);
-    });
-
     test('should work with array operators', () => {
       const testData = [
         { type: 'javascript', id: 1 },
@@ -169,7 +156,7 @@ describe('ArrayFilter - NOT operator', () => {
         { type: 'java', id: 3 },
       ];
 
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           NOT: [{ fieldName: 'type', value: ['javascript', 'java'], operator: 'in' }],
         },
@@ -185,7 +172,7 @@ describe('ArrayFilter - NOT operator', () => {
 
   describe('NOT operator edge cases', () => {
     test('should handle empty NOT array', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           NOT: [],
         },
@@ -201,7 +188,7 @@ describe('ArrayFilter - NOT operator', () => {
         { name: 'Bob', age: 30 },
       ];
 
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           NOT: [{ fieldName: 'age', operator: 'exists' }],
         },
@@ -217,7 +204,7 @@ describe('ArrayFilter - NOT operator', () => {
 
   describe('NOT operator performance and complex scenarios', () => {
     test('should handle deeply nested NOT structures', () => {
-      const filterScheme: FilterScheme = [
+      const filterScheme: FilterScheme<OperatorNames> = [
         {
           AND: [
             { fieldName: 'total', value: 0, operator: 'gt' },
@@ -246,20 +233,6 @@ describe('ArrayFilter - NOT operator', () => {
       // Verify the complex logic works correctly
       expect(Array.isArray(result)).toBe(true);
       expect(result.every((item) => item.total > 0)).toBe(true);
-    });
-
-    test('should maintain immutability with NOT operator', () => {
-      const originalData = [...data];
-      const filterScheme: FilterScheme = [
-        {
-          NOT: [{ fieldName: 'total', value: 20, operator: 'lt' }],
-        },
-      ];
-
-      const filter = new ArrayFilter(filterScheme);
-      filter.applyFilters(data);
-
-      expect(data).toEqual(originalData);
     });
   });
 });

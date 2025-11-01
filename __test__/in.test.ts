@@ -1,11 +1,13 @@
 import assert from 'assert/strict';
 import type { FilterScheme } from '../src/FilterScheme/types';
-import { ArrayFilter } from '../src/index';
+import { ArrayFilter, type OperatorNames } from '../src/index';
 import { data } from './mocks/constants';
 
 describe('in operator', () => {
   it('should filter items where value is in array', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'type', value: ['customer', 'worker'], operator: 'in' }];
+    const filterScheme: FilterScheme<OperatorNames> = [
+      { fieldName: 'type', value: ['customer', 'worker'], operator: 'in' },
+    ];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
 
@@ -15,7 +17,7 @@ describe('in operator', () => {
   });
 
   it('should return no items if value array is empty', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'type', value: [], operator: 'in' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'type', value: [], operator: 'in' }];
     const filterer = new ArrayFilter(filterScheme);
 
     const actual = filterer.applyFilters(data);
@@ -24,7 +26,7 @@ describe('in operator', () => {
   });
 
   it('should handle non-array value gracefully', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'type', value: 'customer', operator: 'in' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'type', value: 'customer', operator: 'in' }];
     const filterer = new ArrayFilter(filterScheme);
 
     const actual = filterer.applyFilters(data);
@@ -34,7 +36,7 @@ describe('in operator', () => {
   });
 
   it('should work for numbers', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'id', value: [1, 3], operator: 'in' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'id', value: [1, 3], operator: 'in' }];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
 

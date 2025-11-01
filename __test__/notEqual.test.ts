@@ -1,11 +1,11 @@
 import assert from 'assert/strict';
 import type { FilterScheme } from '../src/FilterScheme/types';
-import { ArrayFilter } from '../src/index';
+import { ArrayFilter, type OperatorNames } from '../src/index';
 import { data } from './mocks/constants';
 
 describe('notEqual operator', () => {
   it('should filter items where field is not equal to value', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'type', value: 'customer', operator: 'notEqual' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'type', value: 'customer', operator: 'notEqual' }];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
     // All items except those with type === 'customer'
@@ -16,7 +16,7 @@ describe('notEqual operator', () => {
   });
 
   it('should handle strict inequality for numbers', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'id', value: 1, operator: 'notEqual' }];
+    const filterScheme: FilterScheme<OperatorNames> = [{ fieldName: 'id', value: 1, operator: 'notEqual' }];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
 
@@ -26,7 +26,9 @@ describe('notEqual operator', () => {
   });
 
   it('should handle strict inequality for null values', () => {
-    const filterScheme: FilterScheme = [{ fieldName: 'orders.isVIP', value: null, operator: 'notEqual' }];
+    const filterScheme: FilterScheme<OperatorNames> = [
+      { fieldName: 'orders.isVIP', value: null, operator: 'notEqual' },
+    ];
     const filterer = new ArrayFilter(filterScheme);
     const actual = filterer.applyFilters(data);
 

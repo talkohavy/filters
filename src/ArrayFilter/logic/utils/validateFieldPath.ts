@@ -1,4 +1,4 @@
-import { ParameterError } from '../../common/errors';
+import { ParameterError } from '../../../common/errors';
 
 /**
  * Validates field path format

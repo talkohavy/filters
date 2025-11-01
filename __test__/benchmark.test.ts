@@ -1,5 +1,5 @@
 import type { FilterScheme } from '../src/FilterScheme/types';
-import { ArrayFilter } from '../src/index';
+import { ArrayFilter, type OperatorNames } from '../src/index';
 import { data } from './mocks/constants';
 
 function generateLargeDataset(size: number) {
@@ -14,7 +14,7 @@ function generateLargeDataset(size: number) {
 describe('Filterer Performance Benchmarks', () => {
   it('should filter 100,000 items efficiently (timing output)', () => {
     const largeData = generateLargeDataset(100_000);
-    const filterScheme: FilterScheme = [
+    const filterScheme: FilterScheme<OperatorNames> = [
       { fieldName: 'total', value: [10, 90], operator: 'between' },
       { fieldName: 'id', value: 50000, operator: 'gte' },
     ];
