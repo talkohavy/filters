@@ -1,5 +1,3 @@
-import type { OperatorNames } from '../Operators';
-
 /**
  * Individual filter condition that compares a field value using an operator
  */
@@ -21,17 +19,17 @@ type _ValueBasedFilterChild = _BaseFilterChild & {
 /**
  * Individual filter condition that compares a field value using an operator
  */
-export type ExistsFilterChild = _BaseFilterChild & {
+export type ExistsFilterChild<T = string> = _BaseFilterChild & {
   /** The comparison operator to use */
-  operator: OperatorNames;
+  operator: T;
 };
 
 /**
  * Individual filter condition that compares a field value using an operator
  */
-export type OperatorFilterChild = _ValueBasedFilterChild & {
+export type OperatorFilterChild<T = string> = _ValueBasedFilterChild & {
   /** The comparison operator to use */
-  operator: OperatorNames;
+  operator: T;
 };
 
 /**
@@ -42,27 +40,27 @@ export type CustomPredicateFilterChild = _ValueBasedFilterChild & {
   fn: (itemValue: unknown, filterValue: unknown) => boolean;
 };
 
-export type ChildFilter = ExistsFilterChild | OperatorFilterChild | CustomPredicateFilterChild;
+export type ChildFilter<T = string> = ExistsFilterChild<T> | OperatorFilterChild<T> | CustomPredicateFilterChild;
 
 /**
  * Logical operator for combining filter conditions with AND logic
  */
-export type AndFilter = { AND: Array<Filter>; OR?: never; NOT?: never; fieldName?: never };
+export type AndFilter<T = string> = { AND: Array<Filter<T>>; OR?: never; NOT?: never; fieldName?: never };
 
 /**
  * Logical operator for combining filter conditions with OR logic
  */
-export type OrFilter = { OR: Array<Filter>; AND?: never; NOT?: never; fieldName?: never };
+export type OrFilter<T = string> = { OR: Array<Filter<T>>; AND?: never; NOT?: never; fieldName?: never };
 
 /**
  * Logical operator for negating filter conditions (items in array are combined with AND logic)
  */
-export type NotFilter = { NOT: Array<Filter>; AND?: never; OR?: never; fieldName?: never };
+export type NotFilter<T = string> = { NOT: Array<Filter<T>>; AND?: never; OR?: never; fieldName?: never };
 
 /**
  * Parent filter node that can contain multiple child conditions or operators
  */
-export type Filter = ChildFilter | AndFilter | OrFilter | NotFilter;
+export type Filter<T = string> = ChildFilter<T> | AndFilter | OrFilter | NotFilter;
 
 /**
  * Main filter schema type - an array of filter conditions and logical groupings
@@ -92,4 +90,4 @@ export type Filter = ChildFilter | AndFilter | OrFilter | NotFilter;
  * ];
  * ```
  */
-export type FilterScheme = Filter | Array<Filter>;
+export type FilterScheme<T = string> = Filter<T> | Array<Filter<T>>;
