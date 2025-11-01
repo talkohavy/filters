@@ -1,7 +1,7 @@
 import assert from 'assert/strict';
+import type { FilterScheme } from '../src/FilterScheme/types';
 import { ArrayFilter } from '../src/index';
 import { data } from './mocks/constants';
-import type { FilterScheme } from '../src/FilterScheme/types';
 
 describe('ArrayFilter Class', () => {
   it('Simple single filter should pass', () => {

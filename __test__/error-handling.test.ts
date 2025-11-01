@@ -1,5 +1,7 @@
 import assert from 'assert/strict';
+import type { FilterScheme } from '../src/FilterScheme/types';
 import { ArrayFilter } from '../src';
+import { validateFieldPath } from '../src/ArrayFilter/utils/validateFieldPath';
 import {
   FieldPathError,
   FilterError,
@@ -8,8 +10,6 @@ import {
   SchemaValidationError,
 } from '../src/common/errors';
 import { filterValidator } from '../src/FilterScheme/filter-validator';
-import { validateFieldPath } from '../src/ArrayFilter/utils/validateFieldPath';
-import type { FilterScheme } from '../src/FilterScheme/types';
 
 describe('Error Handling and Validation', () => {
   describe('Schema Validation', () => {

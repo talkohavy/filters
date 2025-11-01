@@ -1,7 +1,3 @@
-import { RelationOperators } from '../common/constants';
-import { OperatorError } from '../common/errors';
-import { operators, type IOperators } from '../Operators';
-import type { BuildPredicateFromFilterSchemeProps } from './ArrayFilter.interface';
 import type {
   ChildFilter,
   CustomPredicateFilterChild,
@@ -9,7 +5,11 @@ import type {
   FilterScheme,
   OperatorFilterChild,
 } from '../FilterScheme/types';
+import type { BuildPredicateFromFilterSchemeProps } from './ArrayFilter.interface';
+import { RelationOperators } from '../common/constants';
+import { OperatorError } from '../common/errors';
 import { filterValidator, type FilterValidator } from '../FilterScheme/filter-validator';
+import { operators, type IOperators } from '../Operators';
 import { validateFieldPath } from './utils/validateFieldPath';
 
 /**
@@ -210,7 +210,9 @@ export class ArrayFilter {
         lastItem = itemValue;
         itemValue = itemValue[subKeyPart];
       }
-    } catch {}
+    } catch {
+      console.warn('Warning: Failed to extract nested value for field path:', fieldName);
+    }
 
     return { itemValue, lastItem, lastKey };
   }

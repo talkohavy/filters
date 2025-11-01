@@ -1,7 +1,7 @@
-import { OperatorError, SchemaValidationError } from '../common/errors';
-import { RelationOperators } from '../common/constants';
-import { VALID_OPERATORS, type OperatorNames } from '../Operators';
 import type { FilterScheme } from './types';
+import { RelationOperators } from '../common/constants';
+import { OperatorError, SchemaValidationError } from '../common/errors';
+import { VALID_OPERATORS, type OperatorNames } from '../Operators';
 
 export class FilterValidator {
   /**

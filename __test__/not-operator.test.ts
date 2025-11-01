@@ -1,5 +1,5 @@
-import { ArrayFilter } from '../src/ArrayFilter';
 import type { FilterScheme } from '../src/FilterScheme/types';
+import { ArrayFilter } from '../src/ArrayFilter';
 import { data } from './mocks/constants';
 
 describe('ArrayFilter - NOT operator', () => {
