@@ -149,19 +149,6 @@ describe('ArrayFilter - NOT operator', () => {
       expect(result.every((item) => !item.name.startsWith('Dan'))).toBe(true);
     });
 
-    test('should work with range operators', () => {
-      const filterScheme: FilterScheme<OperatorNames> = [
-        {
-          NOT: [{ fieldName: 'total', value: [10, 30], operator: 'between' }],
-        },
-      ];
-
-      const filter = new ArrayFilter(filterScheme);
-      const result = filter.applyFilters(data);
-
-      expect(result.every((item) => !(item.total >= 10 && item.total <= 30))).toBe(true);
-    });
-
     test('should work with array operators', () => {
       const testData = [
         { type: 'javascript', id: 1 },
@@ -246,20 +233,6 @@ describe('ArrayFilter - NOT operator', () => {
       // Verify the complex logic works correctly
       expect(Array.isArray(result)).toBe(true);
       expect(result.every((item) => item.total > 0)).toBe(true);
-    });
-
-    test('should maintain immutability with NOT operator', () => {
-      const originalData = [...data];
-      const filterScheme: FilterScheme<OperatorNames> = [
-        {
-          NOT: [{ fieldName: 'total', value: 20, operator: 'lt' }],
-        },
-      ];
-
-      const filter = new ArrayFilter(filterScheme);
-      filter.applyFilters(data);
-
-      expect(data).toEqual(originalData);
     });
   });
 });

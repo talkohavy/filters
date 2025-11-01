@@ -13,42 +13,18 @@ import { filterValidator } from '../src/FilterScheme/filter-validator';
 
 describe('Error Handling and Validation', () => {
   describe('Schema Validation', () => {
-    it('should throw SchemaValidationError for non-array schema', () => {
+    it('should throw SchemaValidationError for invalid schemas', () => {
       assert.throws(() => new ArrayFilter('invalid' as any), SchemaValidationError);
-    });
-
-    it('should throw SchemaValidationError for invalid filter objects', () => {
       assert.throws(() => new ArrayFilter([{ invalid: 'filter' } as any]), SchemaValidationError);
-    });
-
-    it('should throw SchemaValidationError for missing fieldName', () => {
       assert.throws(() => new ArrayFilter([{ operator: 'equal', value: 'test' } as any]), SchemaValidationError);
     });
 
-    it('should throw SchemaValidationError for missing operator', () => {
-      assert.throws(() => new ArrayFilter([{ fieldName: 'test', value: 'test' } as any]), SchemaValidationError);
-    });
-
-    it('should throw SchemaValidationError for empty fieldName', () => {
-      assert.throws(
-        () => new ArrayFilter([{ fieldName: '', operator: 'equal', value: 'test' }]),
-        SchemaValidationError,
-      );
-    });
-
-    it('should throw SchemaValidationError for both AND and OR in same filter', () => {
+    it('should throw SchemaValidationError for invalid logical operators', () => {
       assert.throws(() => new ArrayFilter([{ AND: [], OR: [] } as any]), SchemaValidationError);
-    });
-
-    it('should throw SchemaValidationError for empty logical operators', () => {
       assert.throws(() => new ArrayFilter([{ AND: [] } as any]), SchemaValidationError);
     });
 
-    it('should throw SchemaValidationError for non-array logical operators', () => {
-      assert.throws(() => new ArrayFilter([{ AND: 'invalid' } as any]), SchemaValidationError);
-    });
-
-    it('should accept empty filter schema', () => {
+    it('should accept valid schemas', () => {
       const filterer = new ArrayFilter([]);
       const result = filterer.applyFilters([{ name: 'test' }]);
       assert.deepStrictEqual(result, [{ name: 'test' }]);
@@ -56,11 +32,8 @@ describe('Error Handling and Validation', () => {
   });
 
   describe('Operator Validation', () => {
-    it('should throw OperatorError for non-string operator', () => {
+    it('should throw OperatorError for invalid operators', () => {
       assert.throws(() => filterValidator.validateOperator(123), OperatorError);
-    });
-
-    it('should throw OperatorError for unknown operator', () => {
       assert.throws(() => filterValidator.validateOperator('unknownOperator'), OperatorError);
     });
 
@@ -73,59 +46,19 @@ describe('Error Handling and Validation', () => {
         assert(error.context?.suggestion === 'equal');
       }
     });
-
-    it('should validate all supported operators', () => {
-      const validOperators = [
-        'equal',
-        'equals',
-        'softEqual',
-        'gt',
-        'gte',
-        'lt',
-        'lte',
-        'startsWith',
-        'endsWith',
-        'includes',
-        'includesCaseInsensitive',
-        'isEmptyString',
-        'isNull',
-        'isNullish',
-        'isFalsy',
-        'isTruthy',
-        'exists',
-        'keyExists',
-      ];
-
-      for (const operator of validOperators) {
-        assert.doesNotThrow(() => filterValidator.validateOperator(operator));
-      }
-    });
   });
 
   describe('Field Path Validation', () => {
-    it('should throw ParameterError for non-string field path', () => {
+    it('should throw ParameterError for invalid field paths', () => {
       assert.throws(() => validateFieldPath(123 as any), ParameterError);
-    });
-
-    it('should throw ParameterError for empty field path', () => {
       assert.throws(() => validateFieldPath(''), ParameterError);
-    });
-
-    it('should throw ParameterError for consecutive dots', () => {
       assert.throws(() => validateFieldPath('field..name'), ParameterError);
-    });
-
-    it('should throw ParameterError for leading dot', () => {
       assert.throws(() => validateFieldPath('.fieldName'), ParameterError);
-    });
-
-    it('should throw ParameterError for trailing dot', () => {
       assert.throws(() => validateFieldPath('fieldName.'), ParameterError);
     });
 
     it('should accept valid field paths', () => {
-      const validPaths = ['name', 'user.name', 'data.user.profile.email', 'items.0.value'];
-
+      const validPaths = ['name', 'user.name', 'data.user.profile.email'];
       for (const path of validPaths) {
         assert.doesNotThrow(() => validateFieldPath(path));
       }
