@@ -1,7 +1,21 @@
-import requireJSON from 'json-easy-strip';
+import fs from 'fs';
+import { parse } from 'jsonc-parser';
 import { createDefaultPreset } from 'ts-jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
-const tsconfig = requireJSON('./tsconfig.json');
+
+/** @type {any} */
+const errors = [];
+const jsonText = fs.readFileSync('./tsconfig.json', 'utf-8');
+const tsconfig = parse(jsonText, errors, {
+  allowTrailingComma: true,
+  disallowComments: false,
+  allowEmptyContent: false,
+});
+
+if (errors.length > 0) {
+  console.error('Parse errors:', errors);
+  process.exit(1);
+}
 
 /**
  * @type {import('ts-jest').JestConfigWithTsJest}
@@ -16,7 +30,7 @@ const config = {
   testEnvironment: 'jsdom', // <--- IMPORTANT! must be 'jsdom'. Option are: 'jsdom' | 'node'.
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-//   setupFilesAfterEnv: ['<rootDir>/src/tests/setup.tsx'],
+  //   setupFilesAfterEnv: ['<rootDir>/src/tests/setup.tsx'],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
